@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="/exercisecategory">
+   <select name="category" id="">
+      <option value="10">Abs</option>
+      <option value="8">Arms</option>
+      <option value="12">Back</option>
+      <option value="14">Calves</option>
+      <option value="11">Chest</option>
+      <option value="9">Legs</option>
+      <option value="13">Shoulders</option>
+   </select>
+   <button>Go!</button>
+</form>
+
+
+<ul>
+   <li>
+      Name : {{name}}
+      <ul>
+         <li>
+            Description : {{description}}
+         </li>
+         <li>
+            Equipment : {{equipment}}
+         </li>
+         <li>
+            Variations : {{variations}}
+         </li>
+      </ul>
+   </li>
+</ul>
+
+
+{% endblock %}
