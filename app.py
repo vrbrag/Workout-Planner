@@ -33,7 +33,7 @@ def homepage():
 @app.route("/exerciseby")
 def exercise_by():
 
-    return render_template('testexercise.html')
+    return render_template('exerciseby.html')
 
 @app.route("/exercisecategory")
 def get_exercises():
@@ -41,28 +41,27 @@ def get_exercises():
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': category})
 
     data = resp.json()['results'] 
-
-    return render_template('testexercise.html', data=data)
+    
+    return render_template('exerciseby.html', data=data)
 
 
 
 ##### exercise by category : 10 == Abs
 ##### specifically want keys: 'name', 'description', 'equipment', 'variations'
-resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': 10})
+# resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': 10})
 
-data = resp.json()['results']
-for i in range(len(data)):
-    # print(i)
-    name = data[i]['name']
-    description = data[i]['description']
-    equipment = data[i]['equipment']
-    variations = data[i]['variations']
+# data = resp.json()['results']
+# for i in range(len(data)):
+#     # print(i)
+#     name = data[i]['name']
+#     description = data[i]['description']
+#     equipment = data[i]['equipment']
+#     variations = data[i]['variations']
 
 
-    print("------------------------")
-    print(f"NAME: {name}")
-    print(f"DESCRIPTION: {description}")
-    print(f"EQUIPMENT: {equipment}")
-    print(f"VARIATIONS: {variations}")
-    print("------------------------")
-    
+#     print("------------------------")
+#     print(f"NAME: {name}")
+#     print(f"DESCRIPTION: {description}")
+#     print(f"EQUIPMENT: {equipment}")
+#     print(f"VARIATIONS: {variations}")
+#     print("------------------------")

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-category">
+   <form action="/exercisecategory">
+      <select name="category" id="exercise-category">
+         <option value="10">Abs</option>
+         <option value="8">Arms</option>
+         <option value="12">Back</option>
+         <option value="14">Calves</option>
+         <option value="11">Chest</option>
+         <option value="9">Legs</option>
+         <option value="13">Shoulders</option>
+      </select>
+      <button>Go!</button>
+   </form>
+</div>
+
+{% if data %}
+{% for exercise in data %}
+<div class="list-category">
+   <ul>
+      <li>
+         <a href=""><b>{{ exercise['name'] }}</b></a>
+         <ul>
+            <li>
+               Description : <p>
+                  {{ exercise['description'] }}
+               </p>
+            </li>
+            {% if exercise['equipment']%}
+            <li>
+               Equipment : {{ exercise['equipment'] }}
+            </li>
+            {% endif %}
+            {% if exercise['variations']%}
+            <li>
+               Variations : {{ exercise['variations'] }}
+            </li>
+            {% endif %}
+         </ul>
+      </li>
+   </ul>
+</div>
+
+{% endfor %}
+{% endif %}
+{% endblock %}
