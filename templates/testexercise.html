@@ -2,7 +2,7 @@
 {% block content %}
 
 <form action="/exercisecategory">
-   <select name="category" id="">
+   <select name="category" id="exercise-category">
       <option value="10">Abs</option>
       <option value="8">Arms</option>
       <option value="12">Back</option>
@@ -14,23 +14,24 @@
    <button>Go!</button>
 </form>
 
-
+{% if data %}
+{% for i in data %}
 <ul>
    <li>
-      Name : {{name}}
+      Name : {{ i['name'] }}
       <ul>
          <li>
-            Description : {{description}}
+            Description : {{ i['description'] }}
          </li>
          <li>
-            Equipment : {{equipment}}
+            Equipment : {{ i['equipment'] }}
          </li>
          <li>
-            Variations : {{variations}}
+            Variations : {{ i['variations'] }}
          </li>
       </ul>
    </li>
 </ul>
-
-
+{% endfor %}
+{% endif %}
 {% endblock %}

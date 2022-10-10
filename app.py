@@ -40,29 +40,9 @@ def get_exercises():
     category = request.args["category"]
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': category})
 
-    data = resp.json()['results']
-    for i in range(len(data)):
-        name = data[i]['name']
-        description = data[i]['description'] 
-        equipment = data[i]['equipment'] 
-        variations = data[i]['variations'] 
-        
-        
-    # new_dict = {}
-    # for dic in data:
-    #     for key, val in dic.items():
-    #         new_dict[key] = val
-            # for i in keys:
-            #     if i == key:
-                    
-            #         new_dict[key] = val
-                    # new_list = list(new_dict)
-                    # new_key = list(new_dict.keys())
-                    # new_val = list(new_dict.values())
-                    # exercises = {'key' : new_key, 'val' : new_val}
-    
+    data = resp.json()['results'] 
 
-    return render_template('testexercise.html', name=name, description=description, equipment=equipment, variations=variations)
+    return render_template('testexercise.html', data=data)
 
 
 
@@ -86,12 +66,3 @@ for i in range(len(data)):
     print(f"VARIATIONS: {variations}")
     print("------------------------")
     
-    
-
-
-    # keys = ['name', 'description']
-    # new_dict = {}
-    # for dic in data:
-    #     for key, val in dic.items():
-    #         new_dict[key] = val
-    #         print(new_dict)
