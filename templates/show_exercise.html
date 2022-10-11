@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div>
+   <ul>
+      <li>
+         Description : {{ res['description'] }}
+      </li>
+      {% if res['equipment']%}
+      <li>
+         Equipment : {{ res['equipment'] }}
+      </li>
+      {% endif %}
+      {% if res['variations']%}
+      <li>
+         Variations : {{ res['variations'] }}
+      </li>
+      {% endif %}
+      {% if res['images']%}
+      <li>
+         images : {{ res['images'] }}
+      </li>
+      {% endif %}
+   </ul>
+</div>
+
+<a href="category.html">Back</a>
+
+{% endblock %}

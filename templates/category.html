@@ -11,24 +11,8 @@
 <div class="list-category">
    <ul>
       <li>
-         <a href=""><b>{{ exercise['name'] }}</b></a>
-         <!-- <ul>
-            <li>
-               Description : <p>
-                  {{ exercise['description'] }}
-               </p>
-            </li>
-            {% if exercise['equipment']%}
-            <li>
-               Equipment : {{ exercise['equipment'] }}
-            </li>
-            {% endif %}
-            {% if exercise['variations']%}
-            <li>
-               Variations : {{ exercise['variations'] }}
-            </li>
-            {% endif %}
-         </ul> -->
+         <a href="/exercise/{{ exercise['id'] }}"><b>{{ exercise['name'] }}</b></a>
+         {{exercise['id']}}
       </li>
    </ul>
 </div>

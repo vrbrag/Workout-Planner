@@ -25,6 +25,10 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
+# ________________________________________
+# ----------------------------------------
+# EXERCISE BY CATEGORY
+# ----------------------------------------
 # @app.route("/exerciseby")
 # def exercise_by():
 
@@ -102,3 +106,32 @@ def get_shoulders_exercises():
     data = exerciseBy(13)
     
     return render_template('category.html', data=data, name="Shoulders")
+
+# ________________________________________
+# ----------------------------------------
+# EXERCISE INFO
+# ----------------------------------------
+@app.route('/exercise/<int:exercise_id>', methods=["GET"])
+def show_exercise_info(exercise_id):
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
+    data = resp.json()['results']
+  
+    res = None
+    for exercise in data:
+        if exercise['id'] == exercise_id:
+            res = exercise
+    return render_template('show_exercise.html', res=res)
+
+
+
+
+resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
+data = resp.json()['results']
+# res = list(filter(lambda data: data['id'] == 345, data))
+# print(res)
+
+res = None
+for sub in data:
+    if sub['id'] == 345:
+        res = sub
+        print(res)
