@@ -26,6 +26,11 @@ connect_db(app)
 db.create_all()
 
 # @app.route("/exerciseby")
+# def exercise_by():
+
+#     return render_template('exerciseby.html')
+
+# @app.route("/exerciseby")
 # def get_exercises():
 #     category = request.args["category"]
 #     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': category})
