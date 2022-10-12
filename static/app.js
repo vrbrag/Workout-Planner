@@ -1,5 +1,6 @@
 // _______________________________________________
 // ===============================================
+// in View Exercises
 // Add Exercise to workout plan - *** WIP ***
 // _______________________________________________
 // on click 'Add to Workout'
@@ -10,3 +11,14 @@ async function addExercisetoPlan() {
    await axios.get(`/exercise/${id}`)
 }
 // _______________________________________________
+// ===============================================
+// View Exercises by CATEGORY
+// _______________________________________________
+$('.dropdown-item').click(viewExerciseCategory)
+
+function viewExerciseCategory() {
+   alert("clicked!")
+   const categoryId = $(this).data('category')
+   alert(categoryId)
+   return axios.get(`/exerciseby/category/${categoryId}`)
+}

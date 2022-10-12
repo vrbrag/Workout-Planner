@@ -56,7 +56,12 @@ def show_exercise_info(exercise_id):
 # ----------------------------------------
 # EXERCISE BY CATEGORY
 # ----------------------------------------
+@app.route('/exerciseby/category/<int:categoryId>')
+def show_exercises_by_category(categoryId):
+    # category = request.args["value"]
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': categoryId})
+    data_exercises = resp.json()['results']
+    print("is this working?")
+    print(data_exercises[0]['name'])
+    return render_template('all_exercises.html', data_exercises=data_exercises)
 
-
-resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
-data_exercises = resp.json()['results']
