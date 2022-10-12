@@ -1,0 +1,21 @@
+{% extends 'testbase.html' %}
+{% block content %}
+
+
+<h1>Exercises</h1>
+<div class="exercises-list">
+   <ul>
+      {% for exercise in data_exercises %}
+      <li class="exercise">
+         <a data-id="{{exercise['id']}}" href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
+         <div>
+            <button class="add-exercise-btn" data-id="{{exercise['id']}}">Add to Workout</button>
+         </div>
+      </li>
+      {% endfor %}
+   </ul>
+</div>
+
+
+
+{% endblock %}

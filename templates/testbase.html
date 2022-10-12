@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Gym App</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+      integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+      crossorigin="anonymous"></script>
+
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+   <link rel="stylesheet" href="/static/stylesheets/style.css">
+   <link rel="shortcut icon" href="/static/favicon.ico">
+</head>
+
+<body>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <a href="/" class="navbar-brand">
+               <img src="/static/images/fitness-icon.jpeg" width="50px" alt="logo">
+               <span class="navbar-brand mb-0 h1">Fitness App</span>
+            </a>
+            <!-- make fitness icon clickable -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
+         </div>
+
+         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+               <li class="nav-item active">
+                  <a class="nav-link" href="#">Dashboard <span class="sr-only"></span></a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="#">Workout Plans</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="#">Personal Records</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/exercises">Exercises</a>
+               </li>
+               <!-- <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     Exercises by
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                     <a class="dropdown-item" href="/exercisebyabs">Abs</a>
+                     <a class="dropdown-item" href="/exercisebyarms">Arms</a>
+                     <a class="dropdown-item" href="/exercisebyback">Back</a>
+                     <a class="dropdown-item" href="/exercisebycalves">Calves</a>
+                     <a class="dropdown-item" href="/exercisebychest">Chest</a>
+                     <a class="dropdown-item" href="/exercisebylegs">Legs</a>
+                     <a class="dropdown-item" href="/exercisebyshoulders">Shoulders</a>
+                  </div>
+               </li> -->
+            </ul>
+
+         </div>
+         <ul class="nav navbar-nav navbar-right">
+            <!-- ################## -->
+            <!-- move this to outside of nav tags so when signed out display page is just options to sign up/log in -->
+            {% if not g.user %}
+            <li class="nav-item active">
+               <a class="nav-link" href="/signup">Sign up</a>
+            </li>
+            <li class="nav-item active">
+               <a class="nav-link" href="/login">Log in</a>
+            </li>
+            {% else %}
+            <!-- ################## -->
+            <li class="nav-item active">
+               <a class="nav-link" href="/users/{{ g.user.id }}"></a>
+            </li>
+            <li>
+               <a class="nav-link" href="/logout">Log out</a>
+            </li>
+            {% endif %}
+            <!-- ################## -->
+         </ul>
+      </div>
+   </nav>
+   <div class="container">
+      {% for category, message in get_flashed_messages(with_categories=True) %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+
+      {% block content %}
+      {% endblock %}
+
+   </div>
+   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+   <script src="static/app.js"></script>
+</body>
+
+</html>

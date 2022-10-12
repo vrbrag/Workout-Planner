@@ -25,92 +25,22 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
-# ________________________________________
-# ----------------------------------------
-# EXERCISE BY CATEGORY
-# ----------------------------------------
-# @app.route("/exerciseby")
-# def exercise_by():
-
-#     return render_template('exerciseby.html')
-
-# @app.route("/exerciseby")
-# def get_exercises():
-#     category = request.args["category"]
-#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': category})
-#     data = resp.json()['results']
-#     return render_template('exerciseby.html', data=data)
-
-def exerciseBy(cat):
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'category': cat})
-    data = resp.json()['results']
-    return data
 
 @app.route("/")
 def homepage():
 
-    return render_template('base.html')
-
-## by ABS
-@app.route("/exercisebyabs")
-def get_abs_exercises():
-    """Category ABS == 10 """
-    data = exerciseBy(10)
-
-    return render_template('category.html', data=data, name="Abs")
-
-## by ARMS
-@app.route("/exercisebyarms")
-def get_arms_exercises():
-    """Category ARMS == 8 """
-    data = exerciseBy(8)
-    
-    return render_template('category.html', data=data, name="Arms")
-
-## by BACK
-@app.route("/exercisebyback")
-def get_back_exercises():
-    """Category BACK == 12 """
-    data = exerciseBy(12)
-    
-    return render_template('category.html', data=data, name="Back")
-
-## by CALVES
-@app.route("/exercisebycalves")
-def get_calves_exercises():
-    """Category CALVES == 14 """
-    data = exerciseBy(14)
-    
-    return render_template('category.html', data=data, name="Calves")
-
-## by CHEST
-@app.route("/exercisebychest")
-def get_chest_exercises():
-    """Category CHEST == 11 """
-    data = exerciseBy(11)
-    
-    return render_template('category.html', data=data, name="Chest")
-
-## by LEGS
-@app.route("/exercisebylegs")
-def get_legs_exercises():
-    """Category LEGS == 9 """
-    data = exerciseBy(9)
-
-    return render_template('category.html', data=data, name="Legs")
-
-## by SHOULDERS
-@app.route("/exercisebyshoulders")
-def get_shoulders_exercises():
-    """Category SHOULDERS == 13 """
-    data = exerciseBy(13)
-    
-    return render_template('category.html', data=data, name="Shoulders")
+    return render_template('testbase.html')
 
 # ________________________________________
 # ----------------------------------------
-# EXERCISE INFO
+# ALL EXERCISES & Exercise INFO
 # ----------------------------------------
+@app.route("/exercises")
+def show_all_exercises():
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
+    data_exercises = resp.json()['results']
+    return render_template('all_exercises.html', data_exercises=data_exercises)
+
 @app.route('/exercise/<int:exercise_id>', methods=["GET"])
 def show_exercise_info(exercise_id):
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
@@ -122,16 +52,11 @@ def show_exercise_info(exercise_id):
             res = exercise
     return render_template('show_exercise.html', res=res)
 
-
+# ________________________________________
+# ----------------------------------------
+# EXERCISE BY CATEGORY
+# ----------------------------------------
 
 
 resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
-data = resp.json()['results']
-# res = list(filter(lambda data: data['id'] == 345, data))
-# print(res)
-
-res = None
-for sub in data:
-    if sub['id'] == 345:
-        res = sub
-        print(res)
+data_exercises = resp.json()['results']
