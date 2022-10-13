@@ -1,32 +1,9 @@
-// _______________________________________________
-// ===============================================
-// in View Exercises
-// Add Exercise to workout plan - *** WIP ***
-// _______________________________________________
-// on click 'Add to Workout'
-$('.add-exercise-btn').click(addExercisetoPlan)
-
-async function addExercisetoPlan() {
-   const id = $(this).data('id')  // data-id="{{exercise['id']}}"
-   await axios.get(`/exercise/${id}`)
-}
-// _______________________________________________
-// ===============================================
-// View Exercises by CATEGORY
-// _______________________________________________
-// $('.dropdown-item').click(viewExerciseCategory)
-
-// function viewExerciseCategory() {
-//    // alert("clicked!")
-//    // const categoryId = $(this).data('value')
-//    alert(categoryId)
-//    return axios.get(`/exerciseby/category/${categoryId}`)
-// }
-// _______________________________________________
-// ===============================================
-// View Exercises by NAME
-// _______________________________________________
-
+// =====================================================
+// _________________/ *Exercise* Tab /__________________
+// =====================================================
+// _____________________________________________________
+// Search Exercises by NAME
+// _____________________________________________________
 function myFunction() {
    // Declare variables
    let input, filter, table, tr, td, i, txtValue;
@@ -49,3 +26,24 @@ function myFunction() {
       }
    }
 }
+// _____________________________________________________
+// Add Exercise to workout plan - *** WIP ***
+// _____________________________________________________
+// on click 'Add to Workout'
+$('.add-exercise-btn').click(addExercisetoPlan)
+
+async function addExercisetoPlan() {
+   const id = $(this).data('id')  // data-id="{{exercise['id']}}"
+   await axios.get(`/exercise/${id}`)
+}
+// _____________________________________________________
+// Search Exercises by CATEGORY - *** WIP ***
+// _____________________________________________________
+// $('.dropdown-item').click(viewExerciseCategory)
+
+// function viewExerciseCategory() {
+//    // alert("clicked!")
+//    // const categoryId = $(this).data('value')
+//    alert(categoryId)
+//    return axios.get(`/exerciseby/category/${categoryId}`)
+// }

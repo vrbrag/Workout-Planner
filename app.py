@@ -30,10 +30,10 @@ db.create_all()
 def homepage():
 
     return render_template('base.html')
-
+# ****************************************
 # ________________________________________
 # ----------------------------------------
-# ALL EXERCISES & Exercise INFO
+# Search EXERCISES & Exercise INFO
 # ----------------------------------------
 @app.route("/exercises")
 def show_all_exercises():
@@ -52,9 +52,8 @@ def show_exercise_info(exercise_id):
             res = exercise
     return render_template('show_exercise.html', res=res)
 
-# ________________________________________
 # ----------------------------------------
-# EXERCISE BY CATEGORY
+# Search EXERCISES BY CATEGORY
 # ----------------------------------------
 # @app.route('/exerciseby/category/<int:categoryId>')
 # def show_exercises_by_category(categoryId):
