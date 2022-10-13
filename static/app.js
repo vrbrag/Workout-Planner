@@ -14,11 +14,38 @@ async function addExercisetoPlan() {
 // ===============================================
 // View Exercises by CATEGORY
 // _______________________________________________
-$('.dropdown-item').click(viewExerciseCategory)
+// $('.dropdown-item').click(viewExerciseCategory)
 
-function viewExerciseCategory() {
-   alert("clicked!")
-   const categoryId = $(this).data('category')
-   alert(categoryId)
-   return axios.get(`/exerciseby/category/${categoryId}`)
+// function viewExerciseCategory() {
+//    // alert("clicked!")
+//    // const categoryId = $(this).data('value')
+//    alert(categoryId)
+//    return axios.get(`/exerciseby/category/${categoryId}`)
+// }
+// _______________________________________________
+// ===============================================
+// View Exercises by NAME
+// _______________________________________________
+
+function myFunction() {
+   // Declare variables
+   let input, filter, table, tr, td, i, txtValue;
+   input = document.getElementById("myInput");
+   filter = input.value.toUpperCase();
+   table = document.getElementById("exercisesTable");
+   tr = table.getElementsByTagName("tr");
+
+   // EXERCISE QUERY
+   // Loop through all table rows, and hide those who don't match the search query
+   for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+         txtValue = td.textContent || td.innerText;
+         if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+         } else {
+            tr[i].style.display = "none";
+         }
+      }
+   }
 }
