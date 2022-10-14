@@ -8,16 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
-class TestTable(db.Model):
-   """Test if psql tables work"""
 
-   __tablename__="test-table"
-
-   id = db.Column(
-        db.Integer, primary_key=True) 
-
-   name = db.Column(
-      db.Text)
 
 class User(db.Model):
    """User in the system"""
@@ -36,11 +27,16 @@ class User(db.Model):
    password = db.Column(
       db.Text, nullable=False)
 
+   image_url = db.Column(
+        db.Text,
+        default="/static/images/default-pic.png",
+    )
+
    def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
    @classmethod
-   def signup(cls, username, email, password):
+   def signup(cls, username, email, password, image_url):
       """Sign up user.
 
       Hashes password and adds user to system.
@@ -52,6 +48,7 @@ class User(db.Model):
          username=username,
          email=email,
          password=hashed_pwd,
+         image_url=image_url
       )
 
       db.session.add(user)
@@ -113,7 +110,7 @@ class Exercise(db.Model):
       db.Text
    )
 
-   image_url = db.Column(
+   images = db.Column(
         db.Text,
       #   default="/static/images/default-pic.png",
     )
@@ -125,7 +122,7 @@ class ExerciseRecord(db.Model):
    Log one exercise's reps and weight within a workout session
    """
 
-   __tablename__="exercise_record"
+   __tablename__="record"
 
    id = db.Column(
       db.Integer, primary_key=True)
@@ -136,6 +133,9 @@ class ExerciseRecord(db.Model):
    weight = db.Column(
       db.Integer)
 
+   workout_id = db.Column(
+      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE'))
+
    exercise_id = db.Column(
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
    
@@ -144,28 +144,28 @@ class ExerciseRecord(db.Model):
 
 
 
-class WorkoutPlan(db.Model):
-   """Workout plan,
-   'Glutes/Quads', 'Back/Bis', 'Chest/Tris', etc.
-   """
+# class WorkoutPlan(db.Model):
+#    """Workout plan,
+#    'Glutes/Quads', 'Back/Bis', 'Chest/Tris', etc.
+#    """
 
-   __tablename__="workout_plan"
+#    __tablename__="workout_plan"
 
-   id = db.Column(
-      db.Integer, primary_key=True)
+#    id = db.Column(
+#       db.Integer, primary_key=True)
 
-   name = db.Column(
-      db.Text, nullable=False)
+#    name = db.Column(
+#       db.Text, nullable=False)
 
-   session_id = db.Column(
-      db.Integer, db.ForeignKey('workout_session.id', ondelete='CASCADE')
-   )
+#    session_id = db.Column(
+#       db.Integer, db.ForeignKey('workout_session.id', ondelete='CASCADE')
+#    )
 
-   exercise_id = db.Column(
-      db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
-   )
+#    exercise_id = db.Column(
+#       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
+#    )
 
-   session = db.relationship('WorkoutSession', backref="workout_plan")
+#    session = db.relationship('WorkoutSession', backref="workout_plan")
 
 
 
@@ -174,7 +174,7 @@ class WorkoutSession(db.Model):
    One gym session
    """
 
-   __tablename__="workout_session"
+   __tablename__="workout"
 
    id = db.Column(
       db.Integer, primary_key=True)
@@ -182,12 +182,16 @@ class WorkoutSession(db.Model):
    date = db.Column(
       db.DateTime, nullable=False, default=datetime.utcnow())
 
-   exercise_record_id = db.Column(
-      db.Integer, db.ForeignKey('exercise_record.id', ondelete='CASCADE')
+   record_id = db.Column(
+      db.Integer, db.ForeignKey('record.id', ondelete='CASCADE')
    )
    
-   workout_id = db.Column(
-      db.Integer, db.ForeignKey('workout_plan.id', ondelete='CASCADE')
+   # workout_id = db.Column(
+   #    db.Integer, db.ForeignKey('workout_plan.id', ondelete='CASCADE')
+   # )
+
+   exercise_id = db.Column(
+      db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
    )
 
    user_id = db.Column(
@@ -195,7 +199,7 @@ class WorkoutSession(db.Model):
 
    user = db.relationship('User')
 
-   plan = db.relationship('WorkoutPlan', backref="workout_session")
+   # plan = db.relationship('WorkoutPlan', backref="workout_session")
 
 
 def connect_db(app):

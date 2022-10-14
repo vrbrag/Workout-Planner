@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body_class %}onboarding{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+   <div class="col-md-7 col-lg-5">
+      <h2 class="join-message">Join GitFit today!</h2>
+      <form method="POST" id="user_form">
+
+         {% include "_form.html" %}
+
+         <button class="btn btn-outline-warning btn-lg btn-block">Sign up</button>
+      </form>
+   </div>
+</div>
+
+{% endblock %}

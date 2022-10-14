@@ -5,7 +5,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Gym App</title>
+   <title>GitFit App</title>
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
@@ -32,11 +32,10 @@
                <span class="navbar-toggler-icon"></span>
             </button>
          </div>
-
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                <li class="nav-item active">
-                  <a class="nav-link" href="#">Dashboard <span class="sr-only"></span></a>
+                  <a class="nav-link" href="/">Dashboard <span class="sr-only"></span></a>
                </li>
                <li class="nav-item">
                   <a class="nav-link" href="#">Workout Plans</a>
@@ -47,25 +46,7 @@
                <li class="nav-item">
                   <a class="nav-link" href="/exercises">Exercises</a>
                </li>
-               <!-- <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Exercises by
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                     <button class="dropdown-item" data-category="10">Abs</button>
-                     <a class="dropdown-item" data-category="10">Abs</a>
-                     <a class="dropdown-item" data-category="8">Arms</a>
-                     <a class="dropdown-item" data-category="12">Back</a>
-                     <a class="dropdown-item" data-category="14">Calves</a>
-                     <a class="dropdown-item" data-category="15">Cardio</a>
-                     <a class="dropdown-item" data-category="11">Chest</a>
-                     <a class="dropdown-item" data-category="9">Legs</a>
-                     <a class="dropdown-item" data-category="13">Shoulders</a>
-                  </div>
-               </li> -->
             </ul>
-
          </div>
          <ul class="nav navbar-nav navbar-right">
             <!-- ################## -->
@@ -90,6 +71,7 @@
          </ul>
       </div>
    </nav>
+
    <div class="container">
       {% for category, message in get_flashed_messages(with_categories=True) %}
       <div class="alert alert-{{ category }}">{{ message }}</div>
@@ -97,12 +79,13 @@
 
       {% block content %}
       {% endblock %}
-
    </div>
+
    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
    <script src="static/app.js"></script>
+
 </body>
 
 </html>
