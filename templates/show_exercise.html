@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h2>{{ res['name']}}</h2>
 
 <div>
    <ul>
+      {% if res['description']%}
       <li>
          Description : {{ res['description'] }}
       </li>
+      {% endif %}
       {% if res['equipment']%}
       <li>
          Equipment : {{ res['equipment'] }}

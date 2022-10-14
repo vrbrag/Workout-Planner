@@ -22,7 +22,7 @@
    <table id="exercisesTable">
       <tr class="header">
          <th style="width:60%;">Exercise</th>
-         <th hidden style="width:20%;">Category</th>
+         <th style="width:20%;">Category</th>
          <th style="width:20%;">Add Exercise to Workout</th>
       </tr>
       {% for exercise in data_exercises %}
@@ -30,8 +30,8 @@
          <td>
             <a data-id="{{exercise['id']}}" href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
          </td>
-         <td hidden>
-            {{exercise['category']}}
+         <td>
+            {{exercise['id']}}
          </td>
          <td>
             <button class="add-exercise-btn" data-id="{{exercise['id']}}">Add</button>

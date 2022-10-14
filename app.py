@@ -40,12 +40,12 @@ def homepage():
     else:
         return render_template('home-anon.html')
 
-# ________________________________________
-# **********/ SignUp / Login /Logout**************
-# ________________________________________
-# ----------------------------------------
+# _________________________________________________
+# **********/ SignUp / Login /Logout **************
+# _________________________________________________
+# -------------------------------------------------
 # User SignUp/Login/Logout
-# ----------------------------------------
+# -------------------------------------------------
 @app.before_request
 def add_user_to_g():
     """If logged in, add curr user to Flask global"""
@@ -126,20 +126,27 @@ def logout():
     do_logout()
     flash('You have been logged out', 'info')
     return redirect('/login')
-# ________________________________________
-# **********/ Exercises Tab **************
-# ________________________________________
-# ----------------------------------------
+# _________________________________________________
+# *****************/ Exercises Tab ****************
+# _________________________________________________
+# -------------------------------------------------
 # Search EXERCISES & Exercise INFO
-# ----------------------------------------
+# -------------------------------------------------
 @app.route('/exercises')
 def show_all_exercises():
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
+    """Show all exercises
+    - search exercises by name
+    - if logged in, button to add exercise to workout
+    """
+
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data_exercises = resp.json()['results']
     return render_template('all_exercises.html', data_exercises=data_exercises)
 
 @app.route('/exercise/<int:exercise_id>', methods=["GET"])
 def show_exercise_info(exercise_id):
+    """Show details of exercise"""
+    
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
     data = resp.json()['results']
   
@@ -149,9 +156,9 @@ def show_exercise_info(exercise_id):
             res = exercise
     return render_template('show_exercise.html', res=res)
 
-# ----------------------------------------
+# -------------------------------------------------
 # Search EXERCISES BY CATEGORY
-# ----------------------------------------
+# -------------------------------------------------
 # @app.route('/exerciseby/category/<int:categoryId>')
 # def show_exercises_by_category(categoryId):
 #     # category = request.args["value"]
