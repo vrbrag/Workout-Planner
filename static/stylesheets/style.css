@@ -1,3 +1,7 @@
+.nav-item {
+  margin: auto;
+  padding-left: 15px;
+}
 /* =====================================================
 _________________/ *Exercise* Tab /__________________
 ===================================================== */
@@ -27,13 +31,14 @@ _________________/ *Exercise* Tab /__________________
  }
  
  #exercisesTable th, #myTable td {
-   text-align: left; /* Left-align text */
+   text-align: center; /* Left-align text */
    padding: 12px; /* Add padding */
  }
  
  #exercisesTable tr {
    /* Add a bottom border to all table rows */
    border-bottom: 1px solid #ddd;
+   padding: 15px;
  }
  
  #exercisesTable tr.header, #exercisesTable tr:hover {
@@ -41,3 +46,12 @@ _________________/ *Exercise* Tab /__________________
    background-color: #f1f1f1;
  }
 
+ .add-exercise-btn {
+  /* background-color: rgba(255, 166, 0, 0.37); */
+  border-radius: 25%;
+  border: 1px solid #ddd;
+  margin-left: 25%;
+  width: 50%;
+  display: inline-block;
+  font-size: 16px;
+ }

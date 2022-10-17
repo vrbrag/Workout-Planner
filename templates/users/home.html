@@ -1,5 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
 
-This is user's homeopage/dashboard!
+
+
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="col-sm-8">
+            <h2 class="page-header" id="page-title">Dashboard</h2>
+            <hr>
+         </div>
+      </div>
+      <div class="row">
+         <div class="main-content" id="col-sm-12">
+            <div class="card-deck">
+               <div class="card">
+                  <div class="card-body">
+                     <h4 class="card-title">Workout</h4>
+                     <div class="card-text">
+                        <p>Workout Name</p>
+                        <table class="table table-hover table-sm">
+                           <tbody>
+                              <tr>
+                                 <td>Monday</td>
+                                 <td>Glutes and Hams</td>
+                              </tr>
+                              <tr>
+                                 <td>Tuesday</td>
+                                 <td>Shoulders/Chest/Tris</td>
+                              </tr>
+                              <tr>
+                                 <td>Wednesday</td>
+                                 <td>Rest</td>
+                              </tr>
+                              <tr>
+                                 <td>Thursday</td>
+                                 <td>Glutes and Quads</td>
+                              </tr>
+                              <tr>
+                                 <td>Friday</td>
+                                 <td>Back and Bis</td>
+                              </tr>
+                              <tr>
+                                 <td>Saturday</td>
+                                 <td>Full Body</td>
+                              </tr>
+                              <tr>
+                                 <td>Sunday</td>
+                                 <td>Rest</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
 {% endblock%}

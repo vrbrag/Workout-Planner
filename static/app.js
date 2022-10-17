@@ -4,7 +4,7 @@
 // _____________________________________________________
 // Search Exercises by NAME
 // _____________________________________________________
-function myFunction() {
+function searchExercises() {
    // Declare variables
    let input, filter, table, tr, td, i, txtValue;
    input = document.getElementById("myInput");

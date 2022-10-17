@@ -147,7 +147,7 @@ def show_all_exercises():
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
     
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2})
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data = resp.json()['results']
   
     res = None
@@ -168,3 +168,10 @@ def show_exercise_info(exercise_id):
 #     print(data_exercises[0]['name'])
 #     return render_template('all_exercises.html', data_exercises=data_exercises)
 
+resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+data = resp.json()['results']
+res = None
+for exercise in data:
+    if exercise['id'] == 187:
+        res = exercise
+        print(res)
