@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, IntegerField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, Optional
 
 class UserAddForm(FlaskForm):
    """Form for adding users"""
@@ -21,4 +21,10 @@ class TrackWorkoutForm(FlaskForm):
 
    name = StringField('Workout Name', validators=[DataRequired()])
    exercise = StringField('Exercise', validators=[DataRequired()])
-   reps = IntegerField('Reps')
+   reps = IntegerField('Reps', validators=[Optional()])
+   weight = IntegerField('Weight', validators=[Optional()])
+
+class CreateWorkout(FlaskForm):
+
+   name = StringField('Workout Name', validators=[DataRequired()])
+   

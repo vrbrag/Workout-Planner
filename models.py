@@ -86,7 +86,7 @@ class Exercise(db.Model):
       db.Integer, primary_key=True
    )
 
-   exercise_name = db.Column(
+   name = db.Column(
       db.Text, nullable=False 
    )
 
@@ -94,58 +94,32 @@ class Exercise(db.Model):
       db.Text
    )
 
-   muscle = db.Column(
-      db.Text
-   )
+   # muscle = db.Column(
+   #    db.Text
+   # )
 
    equipment = db.Column(
       db.Text, nullable=False
    )
 
-   variation = db.Column(
+   variations = db.Column(
       db.Text
    )
 
-   exercise_category = db.Column(
+   category = db.Column(
       db.Text
    )
 
-   images = db.Column(
-        db.Text,
-      #   default="/static/images/default-pic.png",
-    )
+   # images = db.Column(
+   #      db.Text,
+   #    #   default="/static/images/default-pic.png",
+   #  )
 
 
 
-class ExerciseRecord(db.Model):
-   """Exercise record,
-   Log one exercise's reps and weight within a workout session
-   """
-
-   __tablename__="record"
-
-   id = db.Column(
-      db.Integer, primary_key=True)
-
-   reps = db.Column(
-      db.Integer)
-
-   weight = db.Column(
-      db.Integer)
-
-   workout_id = db.Column(
-      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE'))
-
-   exercise_id = db.Column(
-      db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
-   
-   notes = db.Column(
-      db.Text)
-
-
-
-class WorkoutSession(db.Model):
-   """Workout session == One gym session
+class Workouts(db.Model):
+   """Workouts,
+   Some with same name and day, but unique ID's
    """
 
    __tablename__="workout"
@@ -157,21 +131,63 @@ class WorkoutSession(db.Model):
       db.Text, nullable=False
    )
 
-   date = db.Column(
-      db.DateTime, nullable=False, default=datetime.utcnow())
+   # day = db.Column(
+   #    db.Text, nullable=False
+   # )
 
-   record_id = db.Column(
-      db.Integer, db.ForeignKey('record.id', ondelete='CASCADE')
-   )
-   
    exercise_id = db.Column(
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
    )
-      
+
+   # tracker_id = db.Column(
+   #    db.Integer, db.ForeignKey('tracker.id', ondelete='CASCADE')
+   # )
+     
    user_id = db.Column(
       db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
    user = db.relationship('User')
+
+
+
+class ExerciseTracker(db.Model):
+   """Exercise Tracker,
+   Log one exercise's reps and weight within a workout session
+   """
+
+   __tablename__="tracker"
+
+   id = db.Column(
+      db.Integer, primary_key=True)
+   
+   date = db.Column(
+      db.DateTime, nullable=False, default=datetime.utcnow())
+
+   # name = db.relationship('Exercise', backref='tracker')
+   
+   sets = db.Column(
+      db.Integer
+   )
+
+   reps = db.Column(
+      db.Integer)
+
+   weight = db.Column(
+      db.Integer)
+
+   workout_id = db.Column(
+      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE')
+   )
+
+   # exercise_id = db.Column(
+   #    db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
+   
+   notes = db.Column(
+      db.Text, default=None)
+
+
+
+
 
 
 def connect_db(app):

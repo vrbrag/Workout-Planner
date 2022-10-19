@@ -33,8 +33,10 @@ function searchExercises() {
 $('.add-exercise-btn').click(addExercisetoPlan)
 
 async function addExercisetoPlan() {
+   alert('You clicked!')
    const id = $(this).data('id')  // data-id="{{exercise['id']}}"
-   await axios.get(`/exercise/${id}`)
+   // alert(`id: ${id}`)
+   // await axios.get(`/user/workout/add/${id}`)
 }
 // _____________________________________________________
 // Search Exercises by CATEGORY - *** WIP ***

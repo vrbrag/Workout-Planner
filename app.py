@@ -4,8 +4,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm
-from models import db, connect_db, User, Exercise, ExerciseRecord, WorkoutSession
+from forms import UserAddForm, LoginForm, TrackWorkoutForm
+from models import db, connect_db, User, Exercise, ExerciseTracker, Workouts
 
 
 CURR_USER_KEY = "curr_user"
@@ -35,10 +35,10 @@ def homepage():
     - anon user : login / register
     """
 
-    if g.user:
-        return render_template('users/home.html')
-    else:
-        return render_template('home-anon.html')
+
+    return render_template('users/home.html')
+    # else:
+    #     return render_template('home-anon.html')
 
 # _________________________________________________
 # **********/ SignUp / Login /Logout **************
@@ -46,115 +46,115 @@ def homepage():
 # -------------------------------------------------
 # User SignUp/Login/Logout
 # -------------------------------------------------
-@app.before_request
-def add_user_to_g():
-    """If logged in, add curr user to Flask global"""
-    if CURR_USER_KEY in session:
-        g.user = User.query.get(session[CURR_USER_KEY])
-    else:
-        g.user = None
+# @app.before_request
+# def add_user_to_g():
+#     """If logged in, add curr user to Flask global"""
+#     if CURR_USER_KEY in session:
+#         g.user = User.query.get(session[CURR_USER_KEY])
+#     else:
+#         g.user = None
 
-def do_login(user):
-    """Log in user"""
+# def do_login(user):
+#     """Log in user"""
 
-    session[CURR_USER_KEY] = user.id
+#     session[CURR_USER_KEY] = user.id
 
-def do_logout():
-    """Log out user"""
+# def do_logout():
+#     """Log out user"""
 
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
+#     if CURR_USER_KEY in session:
+#         del session[CURR_USER_KEY]
 
 
-@app.route('/signup', methods=["GET", "POST"])
-def register_user_form():
-    """User sign up 
-    - Create new user and add to DB. Redirect to homepage
-    - If invalid form submittal, re-display form with flash message
-    """
+# @app.route('/signup', methods=["GET", "POST"])
+# def register_user_form():
+#     """User sign up 
+#     - Create new user and add to DB. Redirect to homepage
+#     - If invalid form submittal, re-display form with flash message
+#     """
 
-    form = UserAddForm()
+#     form = UserAddForm()
 
-    if form.validate_on_submit():
-        try:
-            user = User.signup(
-                username=form.username.data,
-                password=form.password.data,
-                email=form.email.data,
-                image_url=form.image_url.data or User.image_url.default.arg,
-            )
-            db.session.commit()
+#     if form.validate_on_submit():
+#         try:
+#             user = User.signup(
+#                 username=form.username.data,
+#                 password=form.password.data,
+#                 email=form.email.data,
+#                 image_url=form.image_url.data or User.image_url.default.arg,
+#             )
+#             db.session.commit()
 
-        except IntegrityError:
-            flash("Username already taken", 'danger')
-            return render_template('users/signup.html', form=form)
+#         except IntegrityError:
+#             flash("Username already taken", 'danger')
+#             return render_template('users/signup.html', form=form)
         
-        do_login(user)
+#         do_login(user)
 
-        return redirect('/')
+#         return redirect('/')
     
-    else:
-        return render_template('users/signup.html', form=form)
+#     else:
+#         return render_template('users/signup.html', form=form)
 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    """Handle login of user"""
+# @app.route('/login', methods=["GET", "POST"])
+# def login():
+#     """Handle login of user"""
 
-    form = LoginForm()
+#     form = LoginForm()
 
-    if form.validate_on_submit():
-        user = User.authenticate(
-            form.username.data, 
-            form.password.data
-        )
+#     if form.validate_on_submit():
+#         user = User.authenticate(
+#             form.username.data, 
+#             form.password.data
+#         )
 
-        if user:
-            do_login(user)
-            flash(f"Hello, {user.username}!", "success")
-            return redirect('/')
+#         if user:
+#             do_login(user)
+#             flash(f"Hello, {user.username}!", "success")
+#             return redirect('/')
 
-        flash("Invalid credentials.", "danger")
+#         flash("Invalid credentials.", "danger")
 
-    else:
-        return render_template('users/login.html', form=form)
+#     else:
+#         return render_template('users/login.html', form=form)
 
 
-@app.route('/logout')
-def logout():
-    """Handle logout of user."""
+# @app.route('/logout')
+# def logout():
+#     """Handle logout of user."""
 
-    do_logout()
-    flash('You have been logged out', 'info')
-    return redirect('/login')
+#     do_logout()
+#     flash('You have been logged out', 'info')
+#     return redirect('/login')
 # _________________________________________________
 # *****************/ Exercises Tab ****************
 # _________________________________________________
 # -------------------------------------------------
 # Search EXERCISES & Exercise INFO
 # -------------------------------------------------
-@app.route('/exercises')
-def show_all_exercises():
-    """Show all exercises
-    - search exercises by name
-    - if logged in, button to add exercise to workout
-    """
+# @app.route('/exercises')
+# def show_all_exercises():
+#     """Show all exercises
+#     - search exercises by name
+#     - if logged in, button to add exercise to workout
+#     """
 
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-    data_exercises = resp.json()['results']
-    return render_template('all_exercises.html', data_exercises=data_exercises)
+#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+#     data_exercises = resp.json()['results']
+#     return render_template('search_exercises.html', data_exercises=data_exercises)
 
-@app.route('/exercise/<int:exercise_id>', methods=["GET"])
-def show_exercise_info(exercise_id):
-    """Show details of exercise"""
+# @app.route('/exercise/<int:exercise_id>', methods=["GET"])
+# def show_exercise_info(exercise_id):
+#     """Show details of exercise"""
     
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-    data = resp.json()['results']
+#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+#     data = resp.json()['results']
   
-    res = None
-    for exercise in data:
-        if exercise['id'] == exercise_id:
-            res = exercise
-    return render_template('show_exercise.html', res=res)
+#     res = None
+#     for exercise in data:
+#         if exercise['id'] == exercise_id:
+#             res = exercise
+#     return render_template('show_exercise.html', res=res)
 
 
 
@@ -164,27 +164,55 @@ def show_exercise_info(exercise_id):
 # -------------------------------------------------
 # User Workout
 # -------------------------------------------------
-@app.route('/user/workout')
+@app.route('/workout')
 def show_workout():
 
-    return render_template('users/workout_week.html')
+    # workout = Workouts.query.all()
+    exercises = Exercise.query.all()
 
-@app.route('/user/workout/id')
-def show_workout_exercises():
+    return render_template('workouts.html', exercises=exercises)
 
-        return render_template('users/workout_session.html')
+@app.route('/workout/create')
+def create_workout_form():
 
-@app.route('/user/workout/form')
-def show_workout_form():
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+    data = resp.json()['results']
+            
+    return render_template('workout_create.html', data=data)
 
-    return render_template('users/tracker.html')
+
+
+# @app.route('/user/workout/add/<int:exercise_id>', methods=["GET"])
+# def add_new_exercise(exercise_id):
+#     """Show details of exercise"""
     
+#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+#     data = resp.json()['results']
+
+#     res = None
+#     for exercise in data:
+#         if exercise['id'] == exercise_id:
+#             res = exercise
+#             print(res)
+#             new_exercise = Exercise(
+#                 name = res['name'],
+#                 description = res['description'],
+#                 category = res['category'],
+#                 equipment = res['equipment'],
+#                 variations = res['variations'],
+#             )
+#             print(new_exercise)
+
+#     return redirect('/user/workout/create', data=data, new_exercise=new_exercise)
+
+
 
 
 # resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
 # data = resp.json()['results']
+
 # res = None
 # for exercise in data:
-#     if exercise['id'] == 187:
+#     if exercise['id'] == 345:
 #         res = exercise
-#         print(res)
+#         print(res['name'])
