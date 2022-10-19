@@ -47,3 +47,4 @@ async function addExercisetoPlan() {
 //    alert(categoryId)
 //    return axios.get(`/exerciseby/category/${categoryId}`)
 // }
+

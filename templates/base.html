@@ -27,18 +27,18 @@
                <span class="navbar-brand mb-0 h1">GitFit</span>
             </a>
             <!-- make fitness icon clickable -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> -->
          </div>
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-               <li class="nav-item active">
+               <li class="nav-item">
                   <a class="nav-link" href="/">Dashboard <span class="sr-only"></span></a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="#">Workout</a>
+                  <a class="nav-link" href="/user/workout">Workout</a>
                </li>
                <li class="nav-item">
                   <a class="nav-link" href="#">Exercise Logs</a>
@@ -52,15 +52,15 @@
             <!-- ################## -->
             <!-- move this to outside of nav tags so when signed out display page is just options to sign up/log in -->
             {% if not g.user %}
-            <li class="nav-item active">
+            <li class="nav-item">
                <a class="nav-link" href="/signup">Sign up</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                <a class="nav-link" href="/login">Log in</a>
             </li>
             {% else %}
             <!-- ################## -->
-            <li class="nav-item active">
+            <li class="nav-item">
                <a class="nav-link" href="/users/{{ g.user.id }}"></a>
             </li>
             <li>

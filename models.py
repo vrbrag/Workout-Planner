@@ -144,40 +144,18 @@ class ExerciseRecord(db.Model):
 
 
 
-# class WorkoutPlan(db.Model):
-#    """Workout plan,
-#    'Glutes/Quads', 'Back/Bis', 'Chest/Tris', etc.
-#    """
-
-#    __tablename__="workout_plan"
-
-#    id = db.Column(
-#       db.Integer, primary_key=True)
-
-#    name = db.Column(
-#       db.Text, nullable=False)
-
-#    session_id = db.Column(
-#       db.Integer, db.ForeignKey('workout_session.id', ondelete='CASCADE')
-#    )
-
-#    exercise_id = db.Column(
-#       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
-#    )
-
-#    session = db.relationship('WorkoutSession', backref="workout_plan")
-
-
-
 class WorkoutSession(db.Model):
-   """Workout session,
-   One gym session
+   """Workout session == One gym session
    """
 
    __tablename__="workout"
 
    id = db.Column(
       db.Integer, primary_key=True)
+
+   name = db.Column(
+      db.Text, nullable=False
+   )
 
    date = db.Column(
       db.DateTime, nullable=False, default=datetime.utcnow())
@@ -186,20 +164,14 @@ class WorkoutSession(db.Model):
       db.Integer, db.ForeignKey('record.id', ondelete='CASCADE')
    )
    
-   # workout_id = db.Column(
-   #    db.Integer, db.ForeignKey('workout_plan.id', ondelete='CASCADE')
-   # )
-
    exercise_id = db.Column(
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
    )
-
+      
    user_id = db.Column(
       db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
    user = db.relationship('User')
-
-   # plan = db.relationship('WorkoutPlan', backref="workout_session")
 
 
 def connect_db(app):
