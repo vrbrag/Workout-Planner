@@ -27,26 +27,18 @@ function searchExercises() {
    }
 }
 // _____________________________________________________
-// Add Exercise to workout plan - *** WIP ***
+// Save Exercise to exercise table - *** WIP ***
 // _____________________________________________________
 // on click 'Add to Workout'
-$('.add-exercise-btn').click(addExercisetoPlan)
+function handleSaveButton() {
 
-async function addExercisetoPlan() {
-   alert('You clicked!')
-   const id = $(this).data('id')  // data-id="{{exercise['id']}}"
-   // alert(`id: ${id}`)
-   // await axios.get(`/user/workout/add/${id}`)
 }
-// _____________________________________________________
-// Search Exercises by CATEGORY - *** WIP ***
-// _____________________________________________________
-// $('.dropdown-item').click(viewExerciseCategory)
+$('.save-exercise-btn').click(saveExercise)
 
-// function viewExerciseCategory() {
-//    // alert("clicked!")
-//    // const categoryId = $(this).data('value')
-//    alert(categoryId)
-//    return axios.get(`/exerciseby/category/${categoryId}`)
-// }
+async function saveExercise() {
+   const id = $(this).data('id')  // data-id="{{exercise['id']}}"
+   alert(`id: ${id}`)
+   await axios.get(`/exercise/${id}`)
+}
+
 

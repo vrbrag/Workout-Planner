@@ -18,7 +18,7 @@
                <tr class="header">
                   <th style="width:60%;">Exercise</th>
                   <th hidden style="width:20%;">Category</th>
-                  <th style="width:20%;">Add Exercise to Workout</th>
+                  <th style="width:20%;">Save to MyExercises</th>
                </tr>
                {% for exercise in data_exercises %}
                <tr>
@@ -28,9 +28,11 @@
                   <td hidden>
                      {{exercise['id']}}
                   </td>
+
                   <td>
-                     <button class="add-exercise-btn" data-id="{{exercise['id']}}">Add</button>
+                     <button class="save-exercise-btn" data-id="{{exercise['id']}}">Save</button>
                   </td>
+
                </tr>
                {% endfor %}
             </table>

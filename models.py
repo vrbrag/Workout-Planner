@@ -94,10 +94,6 @@ class Exercise(db.Model):
       db.Text
    )
 
-   # muscle = db.Column(
-   #    db.Text
-   # )
-
    equipment = db.Column(
       db.Text, nullable=False
    )
@@ -110,10 +106,9 @@ class Exercise(db.Model):
       db.Text
    )
 
-   # images = db.Column(
-   #      db.Text,
-   #    #   default="/static/images/default-pic.png",
-   #  )
+   dataID = db.Column(
+      db.Integer
+   )
 
 
 

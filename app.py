@@ -132,21 +132,54 @@ def homepage():
 # -------------------------------------------------
 # Search EXERCISES & Exercise INFO
 # -------------------------------------------------
-# @app.route('/exercises')
-# def show_all_exercises():
-#     """Show all exercises
-#     - search exercises by name
-#     - if logged in, button to add exercise to workout
-#     """
+@app.route('/exercises')
+def show_all_exercises():
+    """Show all exercises
+    - search exercises by name
+    - if logged in, button to add exercise to workout
+    """
+    exercise = Exercise.query.all()
 
-#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-#     data_exercises = resp.json()['results']
-#     return render_template('search_exercises.html', data_exercises=data_exercises)
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+    data_exercises = resp.json()['results']
 
-# @app.route('/exercise/<int:exercise_id>', methods=["GET"])
-# def show_exercise_info(exercise_id):
+    return render_template('search_exercises.html', data_exercises=data_exercises, exercise=exercise)
+
+
+@app.route('/exercise/<int:exercise_id>', methods=["GET"])
+def show_exercise_info(exercise_id):
+    """Show details of exercise"""
+    
+    exercises = Exercise.query.all()
+
+    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+    data = resp.json()['results']
+  
+    res = None
+    for exercise in data:
+        if exercise['id'] == exercise_id:
+            res = exercise
+            # print(res)
+            new_exercise = Exercise(
+                name = res['name'],
+                description = res['description'],
+                category = res['category'],
+                equipment = res['equipment'],
+                variations = res['variations'],
+                dataID = res['id']
+            )
+            db.session.add(new_exercise)
+            db.session.commit()
+    
+    return render_template('show_exercise.html', res=res, exercises=exercises)
+
+
+# @app.route('/exercise/<int:exercise_id>/add', methods=["GET"])
+# def add_exercise_(exercise_id):
 #     """Show details of exercise"""
     
+#     exercise = Exercise.query.all()
+
 #     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
 #     data = resp.json()['results']
   
@@ -154,61 +187,26 @@ def homepage():
 #     for exercise in data:
 #         if exercise['id'] == exercise_id:
 #             res = exercise
-#     return render_template('show_exercise.html', res=res)
-
-
-
-# _________________________________________________
-# *****************/ Workout Tab ****************
-# _________________________________________________
-# -------------------------------------------------
-# User Workout
-# -------------------------------------------------
-@app.route('/workout')
-def show_workout():
-
-    # workout = Workouts.query.all()
-    exercises = Exercise.query.all()
-
-    return render_template('workouts.html', exercises=exercises)
-
-@app.route('/workout/create')
-def create_workout_form():
-
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-    data = resp.json()['results']
-            
-    return render_template('workout_create.html', data=data)
-
-
-
-# @app.route('/user/workout/add/<int:exercise_id>', methods=["GET"])
-# def add_new_exercise(exercise_id):
-#     """Show details of exercise"""
-    
-#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-#     data = resp.json()['results']
-
-#     res = None
-#     for exercise in data:
-#         if exercise['id'] == exercise_id:
-#             res = exercise
-#             print(res)
+#             # print(res)
 #             new_exercise = Exercise(
 #                 name = res['name'],
 #                 description = res['description'],
 #                 category = res['category'],
 #                 equipment = res['equipment'],
 #                 variations = res['variations'],
+#                 dataID = res['id']
 #             )
-#             print(new_exercise)
+#             db.session.add(new_exercise)
+#             db.session.commit()
+#             # print(new_exercise)
+#     return render_template('show_exercise.html', res=res)
 
-#     return redirect('/user/workout/create', data=data, new_exercise=new_exercise)
 
 
 
 
-# resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
+
+# resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
 # data = resp.json()['results']
 
 # res = None
@@ -216,3 +214,5 @@ def create_workout_form():
 #     if exercise['id'] == 345:
 #         res = exercise
 #         print(res['name'])
+#         print(res['category']['name'])
+#         print(res['images'])
