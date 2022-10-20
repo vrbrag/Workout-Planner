@@ -136,21 +136,18 @@ def homepage():
 def show_all_exercises():
     """Show all exercises
     - search exercises by name
-    - if logged in, button to add exercise to workout
     """
-    exercise = Exercise.query.all()
+    exercises = Exercise.query.all()
 
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data_exercises = resp.json()['results']
 
-    return render_template('search_exercises.html', data_exercises=data_exercises, exercise=exercise)
+    return render_template('search_exercises.html', data_exercises=data_exercises, exercises=exercises)
 
 
 @app.route('/exercise/<int:exercise_id>', methods=["GET"])
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
-    
-    exercises = Exercise.query.all()
 
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data = resp.json()['results']
@@ -168,38 +165,14 @@ def show_exercise_info(exercise_id):
                 variations = res['variations'],
                 dataID = res['id']
             )
+            # print(new_exercise)
             db.session.add(new_exercise)
             db.session.commit()
     
-    return render_template('show_exercise.html', res=res, exercises=exercises)
+    return render_template('show_exercise.html', res=res)
 
 
-# @app.route('/exercise/<int:exercise_id>/add', methods=["GET"])
-# def add_exercise_(exercise_id):
-#     """Show details of exercise"""
-    
-#     exercise = Exercise.query.all()
 
-#     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-#     data = resp.json()['results']
-  
-#     res = None
-#     for exercise in data:
-#         if exercise['id'] == exercise_id:
-#             res = exercise
-#             # print(res)
-#             new_exercise = Exercise(
-#                 name = res['name'],
-#                 description = res['description'],
-#                 category = res['category'],
-#                 equipment = res['equipment'],
-#                 variations = res['variations'],
-#                 dataID = res['id']
-#             )
-#             db.session.add(new_exercise)
-#             db.session.commit()
-#             # print(new_exercise)
-#     return render_template('show_exercise.html', res=res)
 
 
 

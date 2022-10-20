@@ -39,6 +39,7 @@ async function saveExercise() {
    const id = $(this).data('id')  // data-id="{{exercise['id']}}"
    alert(`id: ${id}`)
    await axios.get(`/exercise/${id}`)
+   $(this).remove()
 }
 
 
