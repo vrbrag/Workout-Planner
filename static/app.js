@@ -26,20 +26,37 @@ function searchExercises() {
       }
    }
 }
-// _____________________________________________________
-// Save Exercise to exercise table - *** WIP ***
-// _____________________________________________________
-// on click 'Add to Workout'
-function handleSaveButton() {
 
-}
+// =====================================================
+// _________________/ *Workout* Tab /__________________
+// =====================================================
+// _____________________________________________________
+// Save Exercise to exercise table 
+// _____________________________________________________
+// on click 'Add to my Exercises table'
 $('.save-exercise-btn').click(saveExercise)
 
 async function saveExercise() {
    const id = $(this).data('id')  // data-id="{{exercise['id']}}"
-   alert(`id: ${id}`)
+   // alert(`id: ${id}`)
    await axios.get(`/exercise/${id}`)
    $(this).remove()
 }
+// _____________________________________________________
+// Add Exercise to Workout
+// _____________________________________________________
+// on click 'Add exercise to workout list'
+$('.add-exercise-btn').click(addToWorkout)
 
+async function addToWorkout() {
+   let name = $('#add-exercise').find('option:selected').text()
+   let newOption = $('<option></option>').attr("selected", "selected");
+   newOption.val(name);
+   newOption.html(name);
+   // $("#add-exercise option:selected").remove();
+   $('.selected-workout-list').append('<li>' + name + '<button type="button" class="delete btn btn-danger btn-sm pull-right">Remove</button></li>')
+}
 
+$("body").on("click", ".delete", function () {
+   $(this).parent().remove();
+})

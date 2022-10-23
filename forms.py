@@ -24,6 +24,8 @@ class TrackWorkoutForm(FlaskForm):
    reps = IntegerField('Reps', validators=[Optional()])
    weight = IntegerField('Weight', validators=[Optional()])
 
+INTEGER_CHOICES= [tuple([x,x]) for x in range(1,32)]
+
 class CreateWorkout(FlaskForm):
 
    name = StringField('Workout Name', validators=[DataRequired()])

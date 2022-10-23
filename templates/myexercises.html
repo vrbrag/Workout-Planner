@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<label for="workout-name">Workout Name</label>
+<input type="text">
+<select name="add-exercise" id="add-exercise">
+   {% for exercise in exercises %}
+   <option value="{{exercise.name}}">{{exercise.name}} {{exercise.dataID}}</option>
+   {% endfor %}
+</select>
+<button class="add-exercise-btn">Add</button>
+
+
+<ul class="selected-workout-list">
+
+</ul>
+
+
+
+
+
+{% endblock %}

@@ -172,7 +172,12 @@ def show_exercise_info(exercise_id):
     return render_template('show_exercise.html', res=res)
 
 
+@app.route('/workout')
+def show_myexercises():
 
+    exercises = Exercise.query.all()
+
+    return render_template('myexercises.html', exercises=exercises)
 
 
 
