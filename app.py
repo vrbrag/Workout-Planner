@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, TrackWorkoutForm
+from forms import UserAddForm, LoginForm, TrackWorkoutForm, CreateWorkoutForm
 from models import db, connect_db, User, Exercise, ExerciseTracker, Workouts
 
 
@@ -172,14 +172,34 @@ def show_exercise_info(exercise_id):
     return render_template('show_exercise.html', res=res)
 
 
-@app.route('/workout')
-def show_myexercises():
+@app.route('/workout', methods=['GET','POST'])
+def create_workout():
 
     exercises = Exercise.query.all()
 
-    return render_template('myexercises.html', exercises=exercises)
+    form = CreateWorkoutForm()
+    form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
+
+    if request.method == "POST" and form.validate_on_submit():
+        # return '<p>Workout: {}, Exercise IDs: {}</p>'.format(form.name.data, form.exercises.data)
+        myExercises = Exercise.query.all()
+        selected_exercises = []
+        for exercise in myExercises:
+            if exercise.id in form.exercises.data:
+                selected_exercises.append(exercise)
+                return (selected_exercises)      
+
+    return render_template('myexercises.html', form=form, exercises=exercises)
 
 
+
+# @app.route('/workout/save')
+# def save_workout():
+
+#     workout = Workout(
+#         name = form.name.data,
+#         exercise_id = form.exercises.data
+#     )
 
 
 
@@ -194,3 +214,7 @@ def show_myexercises():
 #         print(res['name'])
 #         print(res['category']['name'])
 #         print(res['images'])
+
+exercises = Exercise.query.all()
+for exercise in exercises:
+    print(exercise.variations)

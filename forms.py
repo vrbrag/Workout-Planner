@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, TextAreaField, widgets,IntegerField, SelectMultipleField
+# from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Optional
 
 class UserAddForm(FlaskForm):
@@ -24,9 +25,14 @@ class TrackWorkoutForm(FlaskForm):
    reps = IntegerField('Reps', validators=[Optional()])
    weight = IntegerField('Weight', validators=[Optional()])
 
-INTEGER_CHOICES= [tuple([x,x]) for x in range(1,32)]
 
-class CreateWorkout(FlaskForm):
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
-   name = StringField('Workout Name', validators=[DataRequired()])
+class CreateWorkoutForm(FlaskForm):
+
+   name = StringField('Name your workout...', validators=[DataRequired()])
+   exercises = MultiCheckboxField('Exercises', choices=[], coerce=int)
+   
    

@@ -54,6 +54,7 @@ async function addToWorkout() {
    newOption.val(name);
    newOption.html(name);
    // $("#add-exercise option:selected").remove();
+   // let selected = document.getElementsByClassName('workout-list').getElementById('exercises')
    $('.selected-workout-list').append('<li>' + name + '<button type="button" class="delete btn btn-danger btn-sm pull-right">Remove</button></li>')
 }
 
