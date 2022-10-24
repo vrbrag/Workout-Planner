@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -35,7 +35,7 @@ def homepage():
     - anon user : login / register
     """
 
-
+    
     return render_template('users/home.html')
     # else:
     #     return render_template('home-anon.html')
@@ -182,12 +182,23 @@ def create_workout():
 
     if request.method == "POST" and form.validate_on_submit():
         # return '<p>Workout: {}, Exercise IDs: {}</p>'.format(form.name.data, form.exercises.data)
-        myExercises = Exercise.query.all()
+    
+        myExercises = [exercises.serialize() for exercises in Exercise.query.all()]
+
         selected_exercises = []
-        for exercise in myExercises:
-            if exercise.id in form.exercises.data:
-                selected_exercises.append(exercise)
-                return (selected_exercises)      
+        # for exercise in myExercises:
+        #     if exercise['id'] in form.exercises.data:
+        #         selected_exercises.append(exercise)
+        for exercise in form.exercises.data:
+        
+
+            workout = Workouts(
+                name = form.name.data,
+                exercise_id = exercise,
+            )
+
+            db.session.add(workout)
+            db.session.commit()
 
     return render_template('myexercises.html', form=form, exercises=exercises)
 
@@ -202,19 +213,3 @@ def create_workout():
 #     )
 
 
-
-
-# resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
-# data = resp.json()['results']
-
-# res = None
-# for exercise in data:
-#     if exercise['id'] == 345:
-#         res = exercise
-#         print(res['name'])
-#         print(res['category']['name'])
-#         print(res['images'])
-
-exercises = Exercise.query.all()
-for exercise in exercises:
-    print(exercise.variations)

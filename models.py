@@ -94,6 +94,10 @@ class Exercise(db.Model):
       db.Text
    )
 
+   dataID = db.Column(
+         db.Integer
+   )
+
    equipment = db.Column(
       db.Text, nullable=False
    )
@@ -106,9 +110,18 @@ class Exercise(db.Model):
       db.Text
    )
 
-   dataID = db.Column(
-      db.Integer
-   )
+
+
+   def serialize(self):
+      return {
+         "id": self.id,
+         "name": self.name,
+         "description": self.description,
+         "dataID": self.dataID,
+         "equipment": self.equipment,
+         "variations": self.variations,
+         "category": self.category,
+      }
 
 
 
@@ -126,23 +139,14 @@ class Workouts(db.Model):
       db.Text, nullable=False
    )
 
-   # day = db.Column(
-   #    db.Text, nullable=False
-   # )
-
    exercise_id = db.Column(
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
    )
-
-   # tracker_id = db.Column(
-   #    db.Integer, db.ForeignKey('tracker.id', ondelete='CASCADE')
-   # )
      
    user_id = db.Column(
       db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
    user = db.relationship('User')
-
 
 
 class ExerciseTracker(db.Model):
