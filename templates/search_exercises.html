@@ -30,7 +30,9 @@
                   </td>
 
                   <td>
+                     {% if exercise['id'] not in myExercises %}
                      <button class="save-exercise-btn" data-id="{{exercise['id']}}">Save</button>
+                     {% endif %}
                   </td>
 
                </tr>

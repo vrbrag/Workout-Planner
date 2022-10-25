@@ -4,12 +4,12 @@ from models import User, Workouts, Exercise, ExerciseTracker
 db.drop_all()
 db.create_all()
 
-# User.query.delete()
-# user_1 = User(
-#    username = 'mickeyMouse',
-#    email = 'mickeymouse@yahoo.com',
-#    password = 123456
-# )
+User.query.delete()
+user_1 = User(
+   username = 'mickeyMouse',
+   email = 'mickeymouse@yahoo.com',
+   password = 123456
+)
 
 # Workouts.query.delete()
 # workout_1 = Workouts(
@@ -133,5 +133,5 @@ exercise_5 = Exercise(
 # )
 
 
-db.session.add_all([exercise_1, exercise_2, exercise_3,exercise_4, exercise_5])
+db.session.add_all([user_1, exercise_1, exercise_2, exercise_3,exercise_4, exercise_5])
 db.session.commit()

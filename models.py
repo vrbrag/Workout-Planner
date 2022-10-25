@@ -140,7 +140,7 @@ class Workouts(db.Model):
    )
 
    exercise_id = db.Column(
-      db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE')
+      db.String
    )
      
    user_id = db.Column(
