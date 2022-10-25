@@ -13,27 +13,15 @@
          <small id="page-instructions"><i>
                Name & add exercises to your new workout.
             </i></small>
-         <!-- <div class="add-exercise">
-            <select name="add-exercise" id="add-exercise">
-               {% for exercise in exercises %}
-               <option value="{{exercise.id}}">{{exercise.name}}</option>
-               {% endfor %}
-            </select>
-            <button class="add-exercise-btn">Add</button> -->
-         <!-- </div> -->
+
          <div class="workout-list">
             <form method="POST">
                {% include "_form.html" %}
-               <!-- <label for="workout-name">Workout Name</label>
-               <input type="text" id="workout-name">
-               <ul class="selected-workout-list">
-
-               </ul> -->
-               <!-- <input type="submit" name="" id=""> -->
                <button class="save-workout">Save</button>
             </form>
-
          </div>
+
+         <a href="/exercises">Don't see the exercise you want?</a>
       </div>
    </div>
 </div>

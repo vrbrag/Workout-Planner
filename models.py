@@ -139,7 +139,7 @@ class Workouts(db.Model):
       db.Text, nullable=False
    )
 
-   exercise_id = db.Column(
+   exerciseIDs = db.Column(
       db.String
    )
      

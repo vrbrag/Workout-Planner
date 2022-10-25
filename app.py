@@ -156,7 +156,7 @@ def show_exercise_info(exercise_id):
     for exercise in data:
         if exercise['id'] == exercise_id:
             res = exercise
-            # print(res)
+            
             new_exercise = Exercise(
                 name = res['name'],
                 description = res['description'],
@@ -165,7 +165,6 @@ def show_exercise_info(exercise_id):
                 variations = res['variations'],
                 dataID = res['id']
             )
-            # print(new_exercise)
             db.session.add(new_exercise)
             db.session.commit()
     
@@ -182,31 +181,24 @@ def create_workout():
     exercises = Exercise.query.all()
 
     form = CreateWorkoutForm()
+    
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
 
     if request.method == "POST" and form.validate_on_submit():
         # return '<p>Workout: {}, Exercise IDs: {}</p>'.format(form.name.data, form.exercises.data)
-    
-        myExercises = [exercises.serialize() for exercises in Exercise.query.all()]
-    
-        # selected_exerciseIDs = ''
-        
         selected = []
-        
         for exerciseID in form.exercises.data:
             selected.append(exerciseID)
-            # selected_exerciseIDs = selected_exerciseIDs + ', ' + exerciseID
 
-        
         json_workoutlist = json.dumps(selected, separators=(',', ':'))
-       
         workout = Workouts(
                         name = form.name.data,
-                        exercise_id = json_workoutlist,
+                        exerciseIDs = json_workoutlist,
                         user_id = session[CURR_USER_KEY] #need user id
                     )
         db.session.add(workout)
         db.session.commit()
+        return redirect('/')
 
     return render_template('myexercises.html', form=form, exercises=exercises)
 
