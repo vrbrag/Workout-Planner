@@ -29,8 +29,10 @@ class User(db.Model):
 
    image_url = db.Column(
         db.Text,
-        default="/static/images/default-pic.png",
-    )
+        default="/static/images/default-pic.png",)
+
+   workouts = db.relationship(
+       'Workouts',)
 
    def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
@@ -83,33 +85,25 @@ class Exercise(db.Model):
    __tablename__="exercise"
 
    id = db.Column(
-      db.Integer, primary_key=True
-   )
+      db.Integer, primary_key=True)
 
    name = db.Column(
-      db.Text, nullable=False 
-   )
+      db.Text, nullable=False)
 
    description = db.Column(
-      db.Text
-   )
+      db.Text)
 
    dataID = db.Column(
-         db.Integer
-   )
+         db.Integer)
 
    equipment = db.Column(
-      db.Text, nullable=False
-   )
+      db.Text, nullable=False)
 
    variations = db.Column(
-      db.Text
-   )
+      db.Text)
 
    category = db.Column(
-      db.Text
-   )
-
+      db.Text)
 
 
    def serialize(self):
@@ -136,17 +130,20 @@ class Workouts(db.Model):
       db.Integer, primary_key=True)
 
    name = db.Column(
-      db.Text, nullable=False
-   )
+      db.Text, nullable=False)
 
    exerciseIDs = db.Column(
-      db.String
-   )
+      db.String)
      
    user_id = db.Column(
       db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
-   user = db.relationship('User')
+   timestamp = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow())
+   
+    # user = db.relationship('User')
 
 
 class ExerciseTracker(db.Model):
@@ -159,14 +156,11 @@ class ExerciseTracker(db.Model):
    id = db.Column(
       db.Integer, primary_key=True)
    
-   date = db.Column(
+   timestamp = db.Column(
       db.DateTime, nullable=False, default=datetime.utcnow())
 
-   # name = db.relationship('Exercise', backref='tracker')
-   
    sets = db.Column(
-      db.Integer
-   )
+      db.Integer)
 
    reps = db.Column(
       db.Integer)
@@ -175,16 +169,12 @@ class ExerciseTracker(db.Model):
       db.Integer)
 
    workout_id = db.Column(
-      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE')
-   )
-
-   # exercise_id = db.Column(
-   #    db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
+      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE'))
    
    notes = db.Column(
       db.Text, default=None)
 
-
+   # exercise = db.relationship('Exercise', backref='tracker')
 
 
 

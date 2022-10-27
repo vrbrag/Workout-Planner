@@ -36,7 +36,15 @@ def homepage():
     """
 
     if g.user:
-        return render_template('users/home.html')
+        workout_ids = [workout.id for workout in g.user.workouts] + [g.user.id]
+        # print(g.user)
+        workouts = (Workouts
+                    .query
+                    .filter(Workouts.user_id.in_(workout_ids))
+                    .order_by(Workouts.timestamp.desc())
+                    .all()
+                    )
+        return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
     else:
         return render_template('home-anon.html')
 
@@ -170,15 +178,23 @@ def show_exercise_info(exercise_id):
     
     return render_template('show_exercise.html', res=res)
 
+# _________________________________________________
+# *****************/ Workout Tab ****************
+# _________________________________________________
+# -------------------------------------------------
 
-@app.route('/workout', methods=['GET','POST'])
+
+# -------------------------------------------------
+# Create workout 
+# -------------------------------------------------
+@app.route('/workout/new', methods=['GET','POST'])
 def create_workout():
 
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    exercises = Exercise.query.all()
+    # exercises = Exercise.query.all()
 
     form = CreateWorkoutForm()
     
@@ -200,7 +216,7 @@ def create_workout():
         db.session.commit()
         return redirect('/')
 
-    return render_template('myexercises.html', form=form, exercises=exercises)
+    return render_template('create_workout.html', form=form )
 
 
 
