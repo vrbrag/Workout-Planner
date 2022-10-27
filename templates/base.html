@@ -50,7 +50,6 @@
          </div>
          <ul class="nav navbar-nav navbar-right">
             <!-- ################## -->
-            <!-- move this to outside of nav tags so when signed out display page is just options to sign up/log in -->
             {% if not g.user %}
             <li class="nav-item">
                <a class="nav-link" href="/signup">Sign up</a>
@@ -61,7 +60,7 @@
             {% else %}
             <!-- ################## -->
             <li class="nav-item">
-               <a class="nav-link" href="/users/{{ g.user.id }}"></a>
+               <a class="nav-link" href="/users/{{ g.user.id }}">{{g.user.username }}</a>
             </li>
             <li>
                <a class="nav-link" href="/logout">Log out</a>

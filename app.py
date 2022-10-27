@@ -28,25 +28,7 @@ connect_db(app)
 db.create_all()
 
 
-@app.route("/")
-def homepage():
-    """Show homepage:
-    - logged in user : 
-    - anon user : login / register
-    """
 
-    if g.user:
-        workout_ids = [workout.id for workout in g.user.workouts] + [g.user.id]
-        # print(g.user)
-        workouts = (Workouts
-                    .query
-                    .filter(Workouts.user_id.in_(workout_ids))
-                    .order_by(Workouts.timestamp.desc())
-                    .all()
-                    )
-        return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
-    else:
-        return render_template('home-anon.html')
 
 # _________________________________________________
 # **********/ SignUp / Login /Logout **************
@@ -179,46 +161,63 @@ def show_exercise_info(exercise_id):
     return render_template('show_exercise.html', res=res)
 
 # _________________________________________________
-# *****************/ Workout Tab ****************
+# ***********/ Homepage / My Workout Tab **********
 # _________________________________________________
 # -------------------------------------------------
+@app.route("/")
+def homepage():
+    """Show homepage:
+    - logged in user : 
+    - anon user : login / register
+    """
 
+    if g.user:
+        workout_ids = [workout.id for workout in g.user.workouts] + [g.user.id]
+        # print(g.user)
+        workouts = (Workouts
+                    .query
+                    .filter(Workouts.user_id.in_(workout_ids))
+                    .order_by(Workouts.timestamp.desc())
+                    .all()
+                    )
+        return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
+    else:
+        return render_template('home-anon.html')
 
 # -------------------------------------------------
-# Create workout 
+# Create new workout 
 # -------------------------------------------------
 @app.route('/workout/new', methods=['GET','POST'])
 def create_workout():
-
+    """Show new workout form
+    - get list of all saved exercises for logged in user
+    - submit new workout """
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    # exercises = Exercise.query.all()
-
     form = CreateWorkoutForm()
-    
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
 
     if request.method == "POST" and form.validate_on_submit():
-        # return '<p>Workout: {}, Exercise IDs: {}</p>'.format(form.name.data, form.exercises.data)
-        selected = []
-        for exerciseID in form.exercises.data:
-            selected.append(exerciseID)
-
-        json_workoutlist = json.dumps(selected, separators=(',', ':'))
-        workout = Workouts(
-                        name = form.name.data,
-                        exerciseIDs = json_workoutlist,
-                        user_id = session[CURR_USER_KEY] #need user id
-                    )
-        db.session.add(workout)
-        db.session.commit()
+        createWorkout(form.exercises.data, form.name.data)
         return redirect('/')
-
     return render_template('create_workout.html', form=form )
 
 
+def createWorkout(exerciseIDs, workoutName):
+    """Function to create/commit new workout session"""
+    selected = []
+    for exerciseID in exerciseIDs:
+        selected.append(exerciseID)
+    json_workoutlist = json.dumps(selected, separators=(',', ':'))
+    workout = Workouts(
+                    name = workoutName,
+                    exerciseIDs = json_workoutlist,
+                    user_id = session[CURR_USER_KEY] #need user id
+                )
+    db.session.add(workout)
+    db.session.commit()
 
 
 
