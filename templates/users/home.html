@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{{ workout_ids }}
-{{ workouts }}
+<!-- {{ workout_ids }}
+{{ workouts }} -->
 
 <div id="main">
    <div class="container pt-4">
@@ -15,39 +15,54 @@
          <a href="/workout/new"><small>Create a new workout here!</small></a>
       </div>
 
+      {% if workouts %}
+      {% for workout in workouts %}
       <div class="row">
          <div class="main-content" id="col-sm-12">
+
             <div class="card-deck">
                <div class="card">
                   <div class="card-body">
-                     {% if workouts %}
-                     {% for workout in workouts %}
-                     <h4 class="card-title">{{workout.name}}</h4>
-                     <hr>
-                     <!-- <div class="card-text">
+
+                     <div class="card-text">
                         <table class="table table-sm">
+                           <thead>
+                              <th style="width:90%;"></th>
+                              <th style="width:5%;"></th>
+                              <th style="width:5%;"></th>
+                           </thead>
                            <tbody class="workout-card">
 
                               <tr>
+                                 <td>
+                                    <a href="/workout/{{ workout.id }}">
+                                       <h5 class="card-title">{{workout.name}}</h5>
+                                    </a>
+                                    <p id="workout-timestamp">{{workout.timestamp.strftime('%d %B %Y')}}</p>
+                                 </td>
+                                 <td>
+                                    <a href="/workout/edit"><small>Edit</small></a>
+                                 </td>
 
                                  <td>
-                                    {{workout.exerciseIDs}}
+                                    <a href="/workout/delete"><small>Delete</small></a>
                                  </td>
                               </tr>
 
                            </tbody>
                         </table>
-                     </div> -->
-                     {% endfor %}
-                     {% else %}
-                     Create a Workout!
-                     {% endif %}
+                     </div>
+
                   </div>
                </div>
             </div>
+
          </div>
       </div>
-
+      {% endfor %}
+      {% else %}
+      Create a Workout!
+      {% endif %}
    </div>
 </div>
 

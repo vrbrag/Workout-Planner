@@ -64,10 +64,19 @@ _________________/ *Workout* Tab /__________________
 /* --------------------------------------- */
 /* Workout Table Styling */
 /* --------------------------------------- */
-.card-deck {
-  padding-bottom: 20px;
+.card-deck  {
+  padding-bottom: 12px;
+  
+}
+
+.card-body {
+  padding: 5px 5px 0px 5px;
 }
 
 .card-title:hover {
   background-color: #f1f1f1;
+}
+
+#workout-timestamp {
+  font-size: 10px;
 }
