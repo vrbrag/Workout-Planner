@@ -202,8 +202,7 @@ def create_workout():
     if request.method == "POST" and form.validate_on_submit():
         createWorkout(form.exercises.data, form.name.data)
         return redirect('/')
-    return render_template('create_workout.html', form=form )
-
+    return render_template('workout/new.html', form=form )
 
 def createWorkout(exerciseIDs, workoutName):
     """Function to create/commit new workout session"""
@@ -219,6 +218,42 @@ def createWorkout(exerciseIDs, workoutName):
     db.session.add(workout)
     db.session.commit()
 
+# -------------------------------------------------
+# Show workout (details of each exercise)
+# -------------------------------------------------
+@app.route('/workout/<int:workout_id>')
+def show_workout(workout_id):
+    """Show workout info"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
+    workout = Workouts.query.get_or_404(workout_id) # get workout's data
+    api_IDs = getExerciseDataIDs(workout)    # parse & get list of exercise.dataIDs
+    results = getAPIData(api_IDs)  # plug in API ids to find exercise data
+  
+    return render_template('workout/show.html', workout=workout, api_IDs=api_IDs, results=results)
 
+def getExerciseDataIDs(workout):
+    """Parse workout.exerciseIDs
+    And filter for workout.exerciseIDs in Exercise db """
+    parsedExerciseIDs = json.loads(workout.exerciseIDs)
+    exercises = (Exercise
+                .query
+                .filter(Exercise.id.in_(parsedExerciseIDs))
+                .all())
+    api_IDs = list([exercise.dataID for exercise in exercises])
+    return api_IDs  # return list of dataID's
+
+def getAPIData(ids):
+    """Call API for full exercise results
+    - parameter: list of API data ids"""
+    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':232})
+    data = resp.json()['results']
+
+    res = []
+    for exercise in data:
+        if exercise['id'] in ids:
+            res.append(exercise)
+    return res  # return list of API exercise data
 

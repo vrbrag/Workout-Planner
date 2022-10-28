@@ -143,7 +143,7 @@ class Workouts(db.Model):
         nullable=False,
         default=datetime.utcnow())
    
-    # user = db.relationship('User')
+   # exercise = db.relationship('Exercise')
 
 
 class ExerciseTracker(db.Model):

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<ul>
+   {{workout.name}}
+   <li>Workout's exercise IDs: {{workout.exerciseIDs}}</li>
+   <li>Exercise table dataIDs: {{api_IDs}}</li>
+</ul>
+
+
+
+
+API data:
+{% for result in results %}
+<ul>
+   <li>Exercise: {{result.name}}</li>
+   <li>Description: {{result.description}}</li>
+   <li>Category: {{result.category['name']}}</li>
+   <li>Equipment: {{result.equipment}}</li>
+   <li>Muscles: {{result.muscles}}</li>
+</ul>
+
+{%endfor%}
+
+
+
+{% endblock %}

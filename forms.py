@@ -33,6 +33,6 @@ class MultiCheckboxField(SelectMultipleField):
 class CreateWorkoutForm(FlaskForm):
 
    name = StringField('Name your workout...', validators=[DataRequired()])
-   exercises = MultiCheckboxField('Exercises', choices=[], coerce=int, validators=[DataRequired()])
+   exercises = MultiCheckboxField('Exercises', choices=[], coerce=int)
    
    
