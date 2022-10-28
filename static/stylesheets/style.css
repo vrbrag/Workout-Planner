@@ -64,13 +64,21 @@ _________________/ *Workout* Tab /__________________
 /* --------------------------------------- */
 /* Workout Table Styling */
 /* --------------------------------------- */
-.card-deck  {
+.card-deck {
   padding-bottom: 12px;
   
+}
+#deck-exercises{
+  padding-bottom: 18px;
+  
+}
+#card-exercises{
+  border-color: black;
 }
 
 .card-body {
   padding: 5px 5px 0px 5px;
+  
 }
 
 .card-title:hover {
@@ -80,3 +88,13 @@ _________________/ *Workout* Tab /__________________
 #workout-timestamp {
   font-size: 10px;
 }
+
+img.exercise-image {
+  /* width: 200px; */
+  height: 100px;
+  padding-right: 15px;
+}
+
+/* .row-image {
+  text-align: center;
+} */

@@ -1,27 +1,101 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<ul>
+<!-- <ul>
    {{workout.name}}
    <li>Workout's exercise IDs: {{workout.exerciseIDs}}</li>
    <li>Exercise table dataIDs: {{api_IDs}}</li>
-</ul>
+</ul> -->
+
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="col-sm-8">
+            <h2 class="page-header" id="page-title">{{workout.name}}</h2>
+            <a href="/workout/edit">Edit</a>
+            <hr>
+         </div>
+         <a href="/workout/track">Track Workout</a>
+      </div>
+
+      {% for result in data %}
+      <div class="row">
+         <div class="main-content" id="col-sm-12">
+
+            <div class="card-deck" id="deck-exercises">
+               <div class="card" id="card-exercises">
+                  <div class="card-body">
+
+                     <div class="card-text">
+                        <table class="table table-sm">
+
+                           <tbody class="exercise-card">
+                              {% if result.images %}
+                              <tr>
+                                 <td class="row-image">
+                                    {% for image in result.images %}
+                                    <img class="exercise-image" src="{{ image.image }}" alt="">
+                                    {% endfor %}
+                                 </td>
+
+                              </tr>
+                              {% endif %}
+
+                              <tr>
+                                 <td>
+                                    <h5>{{result.name}}</h5>
+
+                                 </td>
+                              </tr>
+                              {% if result.description %}
+                              <tr>
+                                 <td>
+                                    <i>{{result.description}}</i>
+                                 </td>
+                              </tr>
+                              {% endif %}
+                              <!-- {% if result.category %}
+                              <tr>
+                                 <td>Category: </td>
+                              </tr>
+                              {% endif %} -->
+
+                              {% if result.equipment %}
+                              <tr>
+                                 <td>Equipment: {{result.equipment[0]['name']}}</td>
+                              </tr>
+                              {% endif %}
+
+                              {% if result.muscles %}
+                              <tr>
+                                 <td>Primary Muscle: {% if result.category %}
+                                    {{result.category['name']}}
+                                    {% endif %}
+                                    <i>({{result.muscles[0]['name']}})</i>
+                                 </td>
+                              </tr>
+                              {% endif %}
+
+                              {% if result.variations %}
+                              <tr>
+                                 <td>
+                                    Variations: {{result.variations}}
+                                 </td>
+                              </tr>
+                              {% endif %}
+
+                        </table>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+
+         </div>
+      </div>
 
 
-
-
-API data:
-{% for result in results %}
-<ul>
-   <li>Exercise: {{result.name}}</li>
-   <li>Description: {{result.description}}</li>
-   <li>Category: {{result.category['name']}}</li>
-   <li>Equipment: {{result.equipment}}</li>
-   <li>Muscles: {{result.muscles}}</li>
-</ul>
-
-{%endfor%}
-
-
-
+      {%endfor%}
+   </div>
+</div>
 {% endblock %}
