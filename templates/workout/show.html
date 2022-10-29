@@ -17,10 +17,10 @@
       <div class="row">
          <div class="col-sm-8">
             <h2 class="page-header" id="page-title">{{workout.name}}</h2>
-            <a href="/workout/edit">Edit</a>
             <hr>
+            <a href="/workout/edit">Edit</a>
+            <a href="/track/{{workout.id}}">Track Workout</a>
          </div>
-         <a href="/track/{{workout.id}}">Track Workout</a>
       </div>
 
       {% for result in data %}
@@ -85,7 +85,7 @@
                                  </td>
                               </tr>
                               {% endif %}
-
+                           </tbody>
                         </table>
                      </div>
                      <!-- <a href="/track/{{result.id}}">Track Exercise</a> -->

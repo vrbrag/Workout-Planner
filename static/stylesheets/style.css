@@ -95,6 +95,7 @@ img.exercise-image {
   padding-right: 15px;
 }
 
-/* .row-image {
-  text-align: center;
-} */
+img.show-exercise-image {
+  height: 300px;
+  padding-right: 15px;
+}

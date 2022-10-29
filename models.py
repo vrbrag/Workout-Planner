@@ -96,15 +96,6 @@ class Exercise(db.Model):
    dataID = db.Column(
          db.Integer)
 
-   equipment = db.Column(
-      db.Text, nullable=False)
-
-   variations = db.Column(
-      db.Text)
-
-   category = db.Column(
-      db.Text)
-
 
    def serialize(self):
       return {
@@ -112,9 +103,6 @@ class Exercise(db.Model):
          "name": self.name,
          "description": self.description,
          "dataID": self.dataID,
-         "equipment": self.equipment,
-         "variations": self.variations,
-         "category": self.category,
       }
 
 

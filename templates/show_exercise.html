@@ -1,29 +1,86 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>{{ res['name']}}</h2>
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="col-sm-8">
+            <h2 class="page-header" id="page-title">{{ res['name']}}</h2>
+         </div>
+      </div>
+      <div class="row">
+         <div class="main-content" id="col-sm-12">
+            <div class="card-deck" id="deck-exercises">
+               <div class="card" id="card-exercises">
+                  <div class="card-body">
+                     <div class="card-text">
+                        <table class="table table-sm">
+                           <thead>
+                              <th style="width:15%;"></th>
+                              <th style="width:85%;"></th>
+                           </thead>
+                           <tbody class="exercise-card">
+                              {% if res['description']%}
+                              <tr>
+                                 <td>
+                                    <h5>Description</h5>
+                                 </td>
+                                 <td>{{ res['description'] }}</td>
+                              </tr>
+                              {% endif %}
 
-<div>
-   <ul>
-      {% if res['description']%}
-      <li>
-         Description : {{ res['description'] }}
-      </li>
-      {% endif %}
-      {% if res['equipment']%}
-      <li>
-         Equipment : {{ res['equipment'] }}
-      </li>
-      {% endif %}
-      {% if res['variations']%}
-      <li>
-         Variations : {{ res['variations'] }}
-      </li>
-      {% endif %}
+                              <tr>
+                                 <td>
+                                    <h5>Primary Muscle</h5>
+                                 </td>
+                                 <td>{{ res['category']['name']}}
+                                    {% if res['muscles'] %}
+                                    <i> - ({{ res['muscles'][0]['name']}})</i>
+                                    {% endif %}
+                                 </td>
+                              </tr>
 
-   </ul>
+                              {% if res['equipment']%}
+                              <tr>
+                                 <td>
+                                    <h5>Equipment</h5>
+                                 </td>
+                                 <td>{{ res['equipment'][0]['name'] }}</td>
+                              </tr>
+                              {% endif %}
+
+                              {% if res['variations']%}
+                              <tr>
+                                 <td>
+                                    <h5>Variations</h5>
+                                 </td>
+                                 <td>{{ res['variations'] }}</td>
+                              </tr>
+                              {% endif %}
+
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <table>
+         <tbody>{% if res['images']%}
+            <tr>
+               {% for image in res['images'] %}
+               <td> <img class="show-exercise-image" src="{{ image.image }}" alt=""></td>
+               {% endfor %}
+            </tr>
+            {% endif %}
+         </tbody>
+      </table>
+   </div>
 </div>
-<button onclick="history.back()">History Back</button>
-<a href="/workout/new" class="save-exercise-btn">Save to MyExercises</a>
+
+<button onclick="history.back()">Previos Page</button>
+<a onclick="history.back()" class="save-exercise-btn">Save to MyExercises</a>
+
 
 {% endblock %}

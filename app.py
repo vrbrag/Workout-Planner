@@ -120,7 +120,7 @@ def logout():
 # *****************/ Exercises Tab ****************
 # _________________________________________________
 # -------------------------------------------------
-# Search EXERCISES & Exercise INFO
+# Search/Show/Save Exercise Info 
 # -------------------------------------------------
 @app.route('/exercises')
 def show_all_exercises():
@@ -139,6 +139,32 @@ def show_all_exercises():
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
 
+    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
+    data = resp.json()['results']
+  
+    res = None
+    for exercise in data:
+        if exercise['id'] == exercise_id:
+            res = exercise
+            
+            # new_exercise = Exercise(
+            #     name = res['name'],
+            #     description = res['description'],
+            #     category = res['category'],
+            #     equipment = res['equipment'],
+            #     variations = res['variations'],
+            #     dataID = res['id']
+            # )
+            # db.session.add(new_exercise)
+            # db.session.commit()
+    
+    return render_template('show_exercise.html', res=res)
+
+@app.route('/exercise/<int:exercise_id>/save', methods=["GET"])
+
+def save_exercise(exercise_id):
+    """Save exercise"""
+    
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data = resp.json()['results']
   
@@ -150,15 +176,13 @@ def show_exercise_info(exercise_id):
             new_exercise = Exercise(
                 name = res['name'],
                 description = res['description'],
-                category = res['category'],
-                equipment = res['equipment'],
-                variations = res['variations'],
                 dataID = res['id']
             )
             db.session.add(new_exercise)
             db.session.commit()
+            flash("Exercise saved", "info")
     
-    return render_template('show_exercise.html', res=res)
+            return render_template('search_exercises.html', res=res)
 
 # _________________________________________________
 # ***********/ Homepage / My Workout Tab **********
@@ -201,7 +225,7 @@ def create_workout():
 
     if request.method == "POST" and form.validate_on_submit():
         createWorkout(form.exercises.data, form.name.data)
-        flash (f"New workout, {form.name.data}, was succesfully created!", 'info')
+        flash (f"New workout '{form.name.data}' was succesfully created!", 'info')
         return redirect('/')
     return render_template('workout/new.html', form=form )
 
@@ -302,4 +326,3 @@ def getAPIData(ids):
 #                 .all())
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
-
