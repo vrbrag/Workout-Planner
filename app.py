@@ -194,7 +194,6 @@ def homepage():
     - logged in user : 
     - anon user : login / register
     """
-
     if g.user:
         workout_ids = [workout.id for workout in g.user.workouts] + [g.user.id]
         # print(g.user)
@@ -237,7 +236,7 @@ def create_workout():
     return render_template('workout/new.html', form=form )
 
 def stringExerciseIDs(exerciseIDs):
-    """Function to create/commit new workout session"""
+    """Function to stringify list of selected exercise IDs from new workout form"""
     selected = []
     for exerciseID in exerciseIDs:
         selected.append(exerciseID)
@@ -245,7 +244,7 @@ def stringExerciseIDs(exerciseIDs):
     return json_exerciseIDs
 
 # -------------------------------------------------
-# Edit new workout 
+# Edit workout 
 # -------------------------------------------------
 @app.route('/workout/<int:workout_id>/edit', methods=["GET", "POST"])
 def edit_workout(workout_id):
@@ -264,15 +263,29 @@ def edit_workout(workout_id):
     if request.method == "POST" and form.validate_on_submit():
         workout.name = form.name.data
         workout.exerciseIDs = stringExerciseIDs(form.exercises.data)
-        
         db.session.commit()
-        
+
         flash (f"'{form.name.data}' updated!", 'success')
         return redirect(f'/workout/{workout.id}')
-
     return render_template('workout/update.html', workout=workout, form=form)
 
+# -------------------------------------------------
+# Delete workout 
+# -------------------------------------------------
+@app.route('/workout/<int:workout_id>/delete', methods=["GET", "POST"])
+def delete_workout(workout_id):
+    """Delete workout 
+    Render to homepage"""
 
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    workout = Workouts.query.get_or_404(workout_id)
+
+    db.session.delete(workout)
+    db.session.commit()
+    return redirect('/')
 
 # -------------------------------------------------
 # Show workout (details of each exercise)
