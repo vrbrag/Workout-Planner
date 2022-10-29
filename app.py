@@ -224,27 +224,25 @@ def create_workout():
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
 
     if request.method == "POST" and form.validate_on_submit():
-        new_workout = createWorkout(form.exercises.data, form.name.data)
+        json_exerciseIDs = stringExerciseIDs(form.exercises.data)
+        new_workout = Workouts(
+                    name = form.name.data,
+                    exerciseIDs = json_exerciseIDs,
+                    user_id = session[CURR_USER_KEY] # user id
+                )
         db.session.add(new_workout)
         db.session.commit()
-        flash (f"New workout '{form.name.data}' was succesfully created!", 'info')
+        flash (f"Success! New workout '{form.name.data}' created.", 'success')
         return redirect('/')
     return render_template('workout/new.html', form=form )
 
-def createWorkout(exerciseIDs, workoutName):
+def stringExerciseIDs(exerciseIDs):
     """Function to create/commit new workout session"""
     selected = []
     for exerciseID in exerciseIDs:
         selected.append(exerciseID)
-    json_workoutlist = json.dumps(selected, separators=(',', ':'))
-    workout = Workouts(
-                    name = workoutName,
-                    exerciseIDs = json_workoutlist,
-                    user_id = session[CURR_USER_KEY] #need user id
-                )
-    # db.session.add(workout)
-    # db.session.commit()
-    return workout
+    json_exerciseIDs = json.dumps(selected, separators=(',', ':'))
+    return json_exerciseIDs
 
 # -------------------------------------------------
 # Edit new workout 
@@ -264,16 +262,12 @@ def edit_workout(workout_id):
     # form.exercises.data = (parsedExerciseIDs)
 
     if request.method == "POST" and form.validate_on_submit():
-        selected = []
-        for exerciseID in form.exercises.data:
-            selected.append(exerciseID)
-        json_workoutlist = json.dumps(selected, separators=(',', ':'))
         workout.name = form.name.data
-        workout.exerciseIDs = json_workoutlist
+        workout.exerciseIDs = stringExerciseIDs(form.exercises.data)
         
         db.session.commit()
         
-        flash (f"'{form.name.data}' updated!", 'info')
+        flash (f"'{form.name.data}' updated!", 'success')
         return redirect(f'/workout/{workout.id}')
 
     return render_template('workout/update.html', workout=workout, form=form)
