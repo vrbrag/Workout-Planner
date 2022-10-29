@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, widgets,IntegerField, SelectMultipleField
+from wtforms import StringField, PasswordField, TextAreaField, widgets,IntegerField, SelectMultipleField, SelectField, SubmitField, FieldList, FormField
 # from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email, Length, Optional
 
@@ -17,14 +17,6 @@ class LoginForm(FlaskForm):
    username = StringField('Username', validators=[DataRequired()])
    password = PasswordField('Password', validators=[Length(min=6)])
    
-class TrackWorkoutForm(FlaskForm):
-   """Form to create workout"""
-
-   name = StringField('Workout Name', validators=[DataRequired()])
-   exercise = StringField('Exercise', validators=[DataRequired()])
-   reps = IntegerField('Reps', validators=[Optional()])
-   weight = IntegerField('Weight', validators=[Optional()])
-
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -35,4 +27,13 @@ class CreateWorkoutForm(FlaskForm):
    name = StringField('Name your workout...', validators=[DataRequired()])
    exercises = MultiCheckboxField('Exercises', choices=[], coerce=int)
    
-   
+
+class TrackWorkoutForm(FlaskForm):
+   """Form to create workout"""
+
+   sets = IntegerField('Sets', validators=[Optional()])
+   reps = IntegerField('Reps', validators=[Optional()])
+   unit_rep = SelectField('Unit', choices=['Reps', 'Max Reps', 'Til Failure', 'Miles', 'Minutes', 'Seconds'])
+   weight = IntegerField('Weight', validators=[Optional()])
+   unit_weight = SelectField('Unit', choices=['lbs', 'bodyweight', 'miles per hour'])
+   notes = TextAreaField('Notes', validators=[Optional()])  

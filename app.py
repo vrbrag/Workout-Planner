@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, TrackWorkoutForm, CreateWorkoutForm
+from forms import UserAddForm, LoginForm, CreateWorkoutForm, b, TrackWorkoutForm, FieldList, FormField
 from models import db, connect_db, User, Exercise, ExerciseTracker, Workouts
 
 
@@ -248,7 +248,7 @@ def getExerciseDataIDs(workout):
 def getAPIData(ids):
     """Call API for full exercise results
     - parameter: list of API data ids"""
-    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':232})
+    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
     data = resp.json()['results']
 
     res = []
@@ -257,4 +257,47 @@ def getAPIData(ids):
             res.append(exercise)
     # print(res)
     return res  # return list of API exercise data
+
+# -------------------------------------------------
+# Track Workout
+# -------------------------------------------------
+@app.route('/track/<int:workout_id>/', methods=['GET','POST'])
+def track_workout(workout_id):
+    """Show workout info"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    workout = Workouts.query.get_or_404(workout_id)
+    parsedExerciseIDs = json.loads(workout.exerciseIDs)
+    print(parsedExerciseIDs)
+    exercisesData = getExerciseData(parsedExerciseIDs)
+    
+    form = TrackWorkoutForm()
+    
+    if request.method == "POST" and form.validate_on_submit():
+        
+        tracker = TrackWorkoutForm(
+            sets = form.sets.data,
+            reps = form.reps.data,
+            unit_rep = form.unit_rep.data,
+            weight = form.weight.data,
+            unit_weight = form.unit_weight.data,
+            exercise_id = 1
+        ) 
+        db.session.add(tracker)  
+        db.session.commit() 
+
+    return render_template('track_workout.html', workout=workout, exercisesData=exercisesData, form=form)
+
+def getExerciseData(parsedExerciseIDs):
+    """Parse workout.exerciseIDs
+    And filter for workout exerciseIDs & workout names in Exercise db """
+    # parsedExerciseIDs = json.loads(workout.exerciseIDs)
+    exercises = (Exercise
+                .query
+                .filter(Exercise.id.in_(parsedExerciseIDs))
+                .all())
+    exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
+    return exercisesData
 

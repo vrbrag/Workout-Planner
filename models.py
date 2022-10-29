@@ -165,15 +165,21 @@ class ExerciseTracker(db.Model):
    reps = db.Column(
       db.Integer)
 
+   unit_rep = db.Column(
+      db.String)
+
    weight = db.Column(
       db.Integer)
-
-   workout_id = db.Column(
-      db.Integer, db.ForeignKey('workout.id', ondelete='CASCADE'))
    
+   unit_weight = db.Column(
+      db.String)
+
    notes = db.Column(
       db.Text, default=None)
 
+   exercise_id = db.Column(
+      db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
+   
    # exercise = db.relationship('Exercise', backref='tracker')
 
 

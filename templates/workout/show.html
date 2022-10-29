@@ -5,6 +5,11 @@
    {{workout.name}}
    <li>Workout's exercise IDs: {{workout.exerciseIDs}}</li>
    <li>Exercise table dataIDs: {{api_IDs}}</li>
+
+   {% for result in data %}
+   <li>{{result}}</li>
+   {%endfor%}
+
 </ul> -->
 
 <div id="main">
@@ -15,7 +20,7 @@
             <a href="/workout/edit">Edit</a>
             <hr>
          </div>
-         <a href="/workout/track">Track Workout</a>
+         <a href="/track/{{workout.id}}">Track Workout</a>
       </div>
 
       {% for result in data %}
