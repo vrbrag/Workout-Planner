@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="col-sm-8">
+            <h3> Edit - <i>'{{ workout.name }}'</i></h3>
+            <hr>
+         </div>
+      </div>
+      <div class="main-content" id="col-sm-12">
+         <small id="page-instructions"><i>
+               Name & add exercises to your new workout.
+            </i></small>
+
+         <div class="workout-list">
+            <form method="POST">
+               {% include "_form.html" %}
+               <button class="edit-workout">Edit</button>
+            </form>
+         </div>
+
+         <a href="/exercises">Don't see the exercise you want?</a>
+      </div>
+   </div>
+</div>
+
+
+{% endblock %}

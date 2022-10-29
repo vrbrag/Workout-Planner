@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, widgets,IntegerField, SelectMultipleField, SelectField, SubmitField, FieldList, FormField
 # from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import DataRequired, Email, Length, Optional
+from wtforms.validators import DataRequired, Email, Length, Optional, StopValidation
 
 class UserAddForm(FlaskForm):
    """Form for adding users"""
@@ -22,10 +22,20 @@ class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
+class MultiCheckboxAtLeastOne():
+    def __init__(self, message=None):
+        if not message:
+            message = 'At least one option must be selected.'
+        self.message = message
+
+    def __call__(self, form, field):
+        if len(field.data) == 0:
+            raise StopValidation(self.message)
+
 class CreateWorkoutForm(FlaskForm):
 
    name = StringField('Name your workout...', validators=[DataRequired()])
-   exercises = MultiCheckboxField('Exercises', choices=[], coerce=int)
+   exercises = MultiCheckboxField('Exercises', choices=[], validators=[MultiCheckboxAtLeastOne()], coerce=int)
    
 
 class TrackWorkoutForm(FlaskForm):

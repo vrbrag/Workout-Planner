@@ -224,7 +224,9 @@ def create_workout():
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
 
     if request.method == "POST" and form.validate_on_submit():
-        createWorkout(form.exercises.data, form.name.data)
+        new_workout = createWorkout(form.exercises.data, form.name.data)
+        db.session.add(new_workout)
+        db.session.commit()
         flash (f"New workout '{form.name.data}' was succesfully created!", 'info')
         return redirect('/')
     return render_template('workout/new.html', form=form )
@@ -240,8 +242,43 @@ def createWorkout(exerciseIDs, workoutName):
                     exerciseIDs = json_workoutlist,
                     user_id = session[CURR_USER_KEY] #need user id
                 )
-    db.session.add(workout)
-    db.session.commit()
+    # db.session.add(workout)
+    # db.session.commit()
+    return workout
+
+# -------------------------------------------------
+# Edit new workout 
+# -------------------------------------------------
+@app.route('/workout/<int:workout_id>/edit', methods=["GET", "POST"])
+def edit_workout(workout_id):
+    """Edit workout"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    workout = Workouts.query.get_or_404(workout_id)
+    # parsedExerciseIDs = json.loads(workout.exerciseIDs)
+
+    form = CreateWorkoutForm(obj=workout)
+    form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
+    # form.exercises.data = (parsedExerciseIDs)
+
+    if request.method == "POST" and form.validate_on_submit():
+        selected = []
+        for exerciseID in form.exercises.data:
+            selected.append(exerciseID)
+        json_workoutlist = json.dumps(selected, separators=(',', ':'))
+        workout.name = form.name.data
+        workout.exerciseIDs = json_workoutlist
+        
+        db.session.commit()
+        
+        flash (f"'{form.name.data}' updated!", 'info')
+        return redirect(f'/workout/{workout.id}')
+
+    return render_template('workout/update.html', workout=workout, form=form)
+
+
 
 # -------------------------------------------------
 # Show workout (details of each exercise)
@@ -326,3 +363,7 @@ def getAPIData(ids):
 #                 .all())
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
+
+workout = Workouts.query.get_or_404(3)
+
+print(workout.exerciseIDs)
