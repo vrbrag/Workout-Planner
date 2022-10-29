@@ -20,14 +20,10 @@
          Variations : {{ res['variations'] }}
       </li>
       {% endif %}
-      {% if res['images']%}
-      <li>
-         images : {{ res['images'] }}
-      </li>
-      {% endif %}
+
    </ul>
 </div>
 <button onclick="history.back()">History Back</button>
-<a href="/exercises">Back</a>
+<a href="/workout/new" class="save-exercise-btn">Save to MyExercises</a>
 
 {% endblock %}
