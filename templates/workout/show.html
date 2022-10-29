@@ -33,7 +33,6 @@
 
                      <div class="card-text">
                         <table class="table table-sm">
-
                            <tbody class="exercise-card">
                               {% if result.images %}
                               <tr>
@@ -64,15 +63,17 @@
 
                               {% if result.equipment %}
                               <tr>
-                                 <td>Equipment: {{result.equipment[0]['name']}}</td>
+                                 <td>
+                                    <h6>Equipment:</h6> {{result.equipment[0]['name']}}
+                                 </td>
                               </tr>
                               {% endif %}
 
                               {% if result.muscles %}
                               <tr>
-                                 <td>Primary Muscle: {% if result.category %}
-                                    {{result.category['name']}}
-                                    {% endif %}
+                                 <td>
+                                    <h6>Primary Muscle:</h6>
+                                    {{result.category['name']}} -
                                     <i>({{result.muscles[0]['name']}})</i>
                                  </td>
                               </tr>
@@ -81,7 +82,8 @@
                               {% if result.variations %}
                               <tr>
                                  <td>
-                                    Variations: {{result.variations}}
+                                    <a href="/exercise/variations/{{result.variations}}">See variations</a>
+
                                  </td>
                               </tr>
                               {% endif %}

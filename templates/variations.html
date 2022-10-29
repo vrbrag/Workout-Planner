@@ -5,9 +5,11 @@
    <div class="container pt-4">
       <div class="row">
          <div class="col-sm-8">
-            <h2 class="page-header" id="page-title">{{ res['name']}}</h2>
+            <h2 class="page-header" id="page-title">Variations</h2>
+            <hr>
          </div>
       </div>
+      {% for res in exercises %}
       <div class="row">
          <div class="main-content" id="col-sm-12">
             <div class="card-deck" id="deck-exercises">
@@ -17,10 +19,29 @@
                         <table class="table table-sm">
 
                            <tbody class="exercise-card">
-                              {% if res['description']%}
+                              {% if res['images']%}
+                              <tr>
+                                 <td> {% for image in res['images'] %}<img class="exercise-image"
+                                       src="{{ image.image }}" alt="">{% endfor %}</td>
+                              </tr>
+                              {% endif %}
+
                               <tr>
                                  <td>
-                                    <h6>Description</h6>{{ res['description'] }}
+                                    <h5>{{ res['name'] }}</h5>
+                                 </td>
+                              </tr>
+
+                              {% if res['description']%}
+                              <tr>
+                                 <td><i>{{ res['description'] }}</i></td>
+                              </tr>
+                              {% endif %}
+
+                              {% if res['equipment']%}
+                              <tr>
+                                 <td>
+                                    <h6>Equipment:</h6> {{ res['equipment'][0]['name'] }}
                                  </td>
                               </tr>
                               {% endif %}
@@ -28,31 +49,11 @@
                               {% if res['muscles'] %}
                               <tr>
                                  <td>
-                                    <h6>Primary Muscle</h6>{{ res['category']['name']}}
+                                    <h6>Primary Muscle:</h6> {{ res['category']['name']}}
                                     <i> - ({{ res['muscles'][0]['name']}})</i>
                                  </td>
                               </tr>
                               {% endif %}
-
-                              {% if res['equipment']%}
-                              <tr>
-                                 <td>
-                                    <h6>Equipment</h6>{{ res['equipment'][0]['name'] }}
-                                 </td>
-                              </tr>
-                              {% endif %}
-
-                              {% if res['variations']%}
-                              <tr>
-                                 <!-- <td>
-                                    <h5>Variations</h5>
-                                 </td> -->
-                                 <td>
-                                    <a href="/exercise/variations/{{res['variations']}}">See Variations</a>
-                                 </td>
-                              </tr>
-                              {% endif %}
-
                            </tbody>
                         </table>
                      </div>
@@ -61,21 +62,11 @@
             </div>
          </div>
       </div>
-      <table>
-         <tbody>{% if res['images']%}
-            <tr>
-               {% for image in res['images'] %}
-               <td> <img class="show-exercise-image" src="{{ image.image }}" alt=""></td>
-               {% endfor %}
-            </tr>
-            {% endif %}
-         </tbody>
-      </table>
+      {% endfor %}
    </div>
 </div>
 
 <button onclick="history.back()">Previous Page</button>
-<a onclick="history.back()" class="save-exercise-btn">Save to MyExercises</a>
 
 
 {% endblock %}

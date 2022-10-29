@@ -231,7 +231,7 @@ def create_workout():
                 )
         db.session.add(new_workout)
         db.session.commit()
-        flash (f"Success! New workout '{form.name.data}' created.", 'success')
+        flash (f"Success! Created new workout, '{form.name.data}'.", 'success')
         return redirect('/')
     return render_template('workout/new.html', form=form )
 
@@ -328,6 +328,16 @@ def getAPIData(ids):
     return res  # return list of API exercise data
 
 # -------------------------------------------------
+# Get Exercise Varations
+# -------------------------------------------------
+@app.route('/exercise/variations/<variations>')
+def show_variations(variations):
+
+    parsedExerciseIDs = json.loads(variations)
+    exercises = getAPIData(parsedExerciseIDs)
+    return render_template('variations.html', exercises=exercises)
+
+# -------------------------------------------------
 # Track Workout
 # -------------------------------------------------
 # @app.route('/track/<int:workout_id>/', methods=['GET','POST'])
@@ -371,6 +381,15 @@ def getAPIData(ids):
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
 
-workout = Workouts.query.get_or_404(3)
 
-print(workout.exerciseIDs)
+variations = '[345, 249]'
+parsedExerciseIDs = json.loads(variations)
+resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
+data = resp.json()['results']
+
+res = []
+for exercise in data:
+    if exercise['id'] in parsedExerciseIDs:
+        res.append(exercise)
+# print(res)
+print(res)
