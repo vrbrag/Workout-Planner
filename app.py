@@ -127,7 +127,7 @@ def show_all_exercises():
     """Show all exercises
     - search exercises by name
     """
-    myExercises = [exercises.serialize() for exercises in Exercise.query.all()]
+    myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
 
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data_exercises = resp.json()['results']
@@ -381,3 +381,5 @@ def show_variations(variations):
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
 
+myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
+print(type(myExercises))

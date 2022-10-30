@@ -36,6 +36,8 @@
                                  {% if exercise['id'] not in myExercises %}
                                  <button id="page-navigation-btn" class="save-exercise-btn"
                                     data-id="{{exercise['id']}}">Save</button>
+                                 {% else %}
+                                 <i class="already-saved">Saved!</i>
                                  {% endif %}
                               </div>
 
