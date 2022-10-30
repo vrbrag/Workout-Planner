@@ -368,6 +368,3 @@ def show_variations(variations):
 #                 .all())
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
-
-myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
-print(type(myExercises))
