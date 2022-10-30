@@ -74,8 +74,11 @@
    </div>
 </div>
 
-<a id="page-navigation-btn" onclick="history.back()">Previous Page</a>
-<a id="page-navigation-btn" class="save-exercise-btn">Save to MyExercises</a>
-
+<a id="page-navigation-btn" onclick="history.back()">Back</a>
+{% if res['id'] not in myExercises %}
+<a href="/exercise/{{ res['id']}}/save" id="page-navigation-btn">Save Exercise</a>
+{% else %}
+<i class="already-saved">Already saved!</i>
+{% endif %}
 
 {% endblock %}

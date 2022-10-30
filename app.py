@@ -139,51 +139,36 @@ def show_all_exercises():
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
 
+    myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
+    res = get_API_exercise(exercise_id)  
+    return render_template('show_exercise.html', res=res, myExercises=myExercises)
+
+
+@app.route('/exercise/<int:exercise_id>/save', methods=["GET"])
+def save_exercise(exercise_id):
+    """Save exercise"""
+    
+    res = get_API_exercise(exercise_id)       
+    new_exercise = Exercise(
+        name = res['name'],
+        description = res['description'],
+        dataID = res['id']
+    )
+    db.session.add(new_exercise)
+    db.session.commit()
+    flash(f"'{res['name']}' exercise saved", "info")
+    return redirect('/exercises')
+
+def get_API_exercise(id):
+    """Get one api exercise"""
     resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
     data = resp.json()['results']
   
     res = None
     for exercise in data:
-        if exercise['id'] == exercise_id:
+        if exercise['id'] == id:
             res = exercise
-            
-            # new_exercise = Exercise(
-            #     name = res['name'],
-            #     description = res['description'],
-            #     category = res['category'],
-            #     equipment = res['equipment'],
-            #     variations = res['variations'],
-            #     dataID = res['id']
-            # )
-            # db.session.add(new_exercise)
-            # db.session.commit()
-    
-    return render_template('show_exercise.html', res=res)
-
-@app.route('/exercise/<int:exercise_id>/save', methods=["GET"])
-
-def save_exercise(exercise_id):
-    """Save exercise"""
-    
-    resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
-    data = resp.json()['results']
-  
-    res = None
-    for exercise in data:
-        if exercise['id'] == exercise_id:
-            res = exercise
-            
-            new_exercise = Exercise(
-                name = res['name'],
-                description = res['description'],
-                dataID = res['id']
-            )
-            db.session.add(new_exercise)
-            db.session.commit()
-            flash("Exercise saved", "info")
-    
-            return render_template('search_exercises.html', res=res)
-
+    return res
 # _________________________________________________
 # ***********/ Homepage / My Workout Tab **********
 # _________________________________________________
@@ -223,7 +208,7 @@ def create_workout():
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
 
     if request.method == "POST" and form.validate_on_submit():
-        json_exerciseIDs = stringExerciseIDs(form.exercises.data)
+        json_exerciseIDs = string_exerciseIDs(form.exercises.data)
         new_workout = Workouts(
                     name = form.name.data,
                     exerciseIDs = json_exerciseIDs,
@@ -235,7 +220,7 @@ def create_workout():
         return redirect('/')
     return render_template('workout/new.html', form=form )
 
-def stringExerciseIDs(exerciseIDs):
+def string_exerciseIDs(exerciseIDs):
     """Function to stringify list of selected exercise IDs from new workout form"""
     selected = []
     for exerciseID in exerciseIDs:
@@ -262,7 +247,7 @@ def edit_workout(workout_id):
 
     if request.method == "POST" and form.validate_on_submit():
         workout.name = form.name.data
-        workout.exerciseIDs = stringExerciseIDs(form.exercises.data)
+        workout.exerciseIDs = string_exerciseIDs(form.exercises.data)
         db.session.commit()
 
         flash (f"'{form.name.data}' updated!", 'success')
@@ -298,12 +283,12 @@ def show_workout(workout_id):
         return redirect("/")
 
     workout = Workouts.query.get_or_404(workout_id) # get workout's data
-    api_IDs = getExerciseDataIDs(workout)    # parse & get list of exercise.dataIDs
-    data = getAPIData(api_IDs)  # plug in API ids to find exercise data
+    api_IDs = get_exercise_DataIDs(workout)    # parse & get list of exercise.dataIDs
+    data = get_API_data(api_IDs)  # plug in API ids to find exercise data
   
     return render_template('workout/show.html', workout=workout, api_IDs=api_IDs, data=data)
 
-def getExerciseDataIDs(workout):
+def get_exercise_DataIDs(workout):
     """Parse workout.exerciseIDs
     And filter for workout.exerciseIDs in Exercise db """
     parsedExerciseIDs = json.loads(workout.exerciseIDs)
@@ -314,7 +299,7 @@ def getExerciseDataIDs(workout):
     api_IDs = list([exercise.dataID for exercise in exercises])
     return api_IDs  # return list of dataID's
 
-def getAPIData(ids):
+def get_API_data(ids):
     """Call API for full exercise results
     - parameter: list of API data ids"""
     resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
@@ -324,7 +309,6 @@ def getAPIData(ids):
     for exercise in data:
         if exercise['id'] in ids:
             res.append(exercise)
-    # print(res)
     return res  # return list of API exercise data
 
 # -------------------------------------------------
@@ -333,8 +317,12 @@ def getAPIData(ids):
 @app.route('/exercise/variations/<variations>')
 def show_variations(variations):
 
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
     parsedExerciseIDs = json.loads(variations)
-    exercises = getAPIData(parsedExerciseIDs)
+    exercises = get_API_data(parsedExerciseIDs)
     return render_template('variations.html', exercises=exercises)
 
 # -------------------------------------------------
@@ -350,7 +338,7 @@ def show_variations(variations):
 #     workout = Workouts.query.get_or_404(workout_id)
 #     parsedExerciseIDs = json.loads(workout.exerciseIDs)
 #     print(parsedExerciseIDs)
-#     exercisesData = getExerciseData(parsedExerciseIDs)
+#     exercisesData = get_exercise_data(parsedExerciseIDs)
 
 #     for exercise in parsedExerciseIDs: #for each exercise ID, track exercise...
 #         form = TrackWorkoutForm()
@@ -370,7 +358,7 @@ def show_variations(variations):
 
 #     return render_template('track_workout.html', workout=workout, exercisesData=exercisesData, form=form)
 
-# def getExerciseData(parsedExerciseIDs):
+# def get_exercise_data(parsedExerciseIDs):
 #     """Parse workout.exerciseIDs
 #     And filter for workout exerciseIDs & workout names in Exercise db """
 #     # parsedExerciseIDs = json.loads(workout.exerciseIDs)
