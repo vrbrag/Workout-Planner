@@ -8,46 +8,46 @@
             <h2>Exercises</h2>
             <hr>
          </div>
-      </div>
-      <div class="main-content" id="col-sm-12">
-
-         <input type="search" id="myInput" onkeyup="searchExercises()" placeholder="Search for exercise...">
-
-         <div class="exercises-list">
-            <table id="exercisesTable">
-               <tr class="header">
-                  <th style="width:60%;">Exercise</th>
-                  <th hidden style="width:20%;">Category</th>
-                  <th style="width:20%;">Save to MyExercises</th>
-               </tr>
-               {% for exercise in data_exercises %}
-               <tbody class="exerciseBody">
-                  <tr>
-                     <td>
-                        <a data-id="{{exercise['id']}}" href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
-                     </td>
-                     <td hidden>
-                        {{exercise['id']}}
-                     </td>
-
-                     <td>
-
-                        <div class="col-md-12 text-center">
-                           {% if exercise['id'] not in myExercises %}
-                           <button id="page-navigation-btn" class="save-exercise-btn"
-                              data-id="{{exercise['id']}}">Save</button>
-                           {% endif %}
-                        </div>
-
-                     </td>
-
-                  </tr>
-               </tbody>
-               {% endfor %}
-            </table>
+         <div class="page-navigation">
+            <a id="page-navigation-btn" href="/workout/new"">New Workout</a>
          </div>
       </div>
-   </div>
+      <div class=" main-content" id="col-sm-12">
 
-</div>
-{% endblock %}
+               <input type="search" id="myInput" onkeyup="searchExercises()" placeholder="Search for exercise...">
+
+               <div class="exercises-list">
+                  <table id="exercisesTable">
+                     <tr class="header">
+                        <th style="width:50%;">Exercise</th>
+                        <th style="width:50%;">Save Exercise</th>
+                     </tr>
+                     {% for exercise in data_exercises %}
+                     <tbody class="exerciseBody">
+                        <tr>
+                           <td class="col-md-8 text-center">
+                              <a data-id="{{exercise['id']}}"
+                                 href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
+                           </td>
+
+                           <td>
+
+                              <div class="col-md-12 text-center">
+                                 {% if exercise['id'] not in myExercises %}
+                                 <button id="page-navigation-btn" class="save-exercise-btn"
+                                    data-id="{{exercise['id']}}">Save</button>
+                                 {% endif %}
+                              </div>
+
+                           </td>
+
+                        </tr>
+                     </tbody>
+                     {% endfor %}
+                  </table>
+               </div>
+         </div>
+      </div>
+
+   </div>
+   {% endblock %}
