@@ -381,15 +381,3 @@ def show_variations(variations):
 #     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
 #     return exercisesData
 
-
-variations = '[345, 249]'
-parsedExerciseIDs = json.loads(variations)
-resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
-data = resp.json()['results']
-
-res = []
-for exercise in data:
-    if exercise['id'] in parsedExerciseIDs:
-        res.append(exercise)
-# print(res)
-print(res)

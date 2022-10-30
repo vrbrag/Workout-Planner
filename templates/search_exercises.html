@@ -21,21 +21,28 @@
                   <th style="width:20%;">Save to MyExercises</th>
                </tr>
                {% for exercise in data_exercises %}
-               <tr>
-                  <td>
-                     <a data-id="{{exercise['id']}}" href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
-                  </td>
-                  <td hidden>
-                     {{exercise['id']}}
-                  </td>
+               <tbody class="exerciseBody">
+                  <tr>
+                     <td>
+                        <a data-id="{{exercise['id']}}" href="/exercise/{{exercise['id']}}">{{exercise['name']}}</a>
+                     </td>
+                     <td hidden>
+                        {{exercise['id']}}
+                     </td>
 
-                  <td>
-                     {% if exercise['id'] not in myExercises %}
-                     <button class="save-exercise-btn" id="save" data-id="{{exercise['id']}}">Save</button>
-                     {% endif %}
-                  </td>
+                     <td>
 
-               </tr>
+                        <div class="col-md-12 text-center">
+                           {% if exercise['id'] not in myExercises %}
+                           <button id="page-navigation-btn" class="save-exercise-btn"
+                              data-id="{{exercise['id']}}">Save</button>
+                           {% endif %}
+                        </div>
+
+                     </td>
+
+                  </tr>
+               </tbody>
                {% endfor %}
             </table>
          </div>

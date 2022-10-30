@@ -4,6 +4,37 @@
   padding-left: 20px;
 }
 
+.nav > li > img {
+  width: 32px;
+  border-radius: 32px;
+}
+
+.page-navigation {
+  display: flex;
+  justify-content: right;
+}
+
+#page-navigation-btn {
+  margin: 1px 0px 5px 5px;
+  font: bold 14px Arial;
+  text-decoration: none;
+  background-color: #ffffff;
+  color: #333333;
+  padding: 4px 7px 4px 7px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+  border-radius: 3px;
+}
+#page-navigation-btn:hover {
+  background-color: rgba(252, 171, 22, 0.445);
+  color: orange;
+}
+#page-instructions {
+  padding: 0px 0px 12px 3px;
+}
+
 /* =====================================================
 _________________/ *Exercise* Tab /__________________
 ===================================================== */
@@ -43,19 +74,16 @@ _________________/ *Exercise* Tab /__________________
    padding: 15px;
  }
  
- #exercisesTable tr.header, #exercisesTable tr:hover {
+ #exercisesTable tr.header, #exercisesTable tr:hover{
    /* Add a background color to the table header and on hover */
    background-color: #f1f1f1;
  }
-
- button.save-exercise-btn {
-  /* background-color: rgba(255, 166, 0, 0.37); */
-  border-radius: 25%;
-  border: 1px solid #ddd;
-  margin-left: 25%;
-  width: 50%;
-  display: inline-block;
-  font-size: 16px;
+ #exercisesTable a{
+   text-decoration: none;
+   color: black;
+ }
+ #exercisesTable a:hover{
+   color: orange;
  }
 
  /* =====================================================
@@ -81,7 +109,15 @@ _________________/ *Workout* Tab /__________________
   
 }
 
-.card-title:hover {
+.workout-card a {
+  text-decoration: none;
+  color: black;
+} 
+.workout-card a:hover {
+  color: orange;
+}
+
+.row .card-body:hover {
   background-color: #f1f1f1;
 }
 

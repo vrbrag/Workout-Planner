@@ -10,18 +10,23 @@
          </div>
       </div>
       <div class="main-content" id="col-sm-12">
-         <small id="page-instructions"><i>
-               Name & add exercises to your new workout.
-            </i></small>
-
+         <div id="page-instructions">
+            <small><i>
+                  Name & add exercises to your new workout.
+               </i></small>
+         </div>
          <div class="workout-list">
             <form method="POST">
                {% include "_form.html" %}
-               <button class="save-workout">Save</button>
+               <button id="page-navigation-btn" class="save-workout">Save</button>
             </form>
          </div>
 
-         <a href="/exercises">Don't see the exercise you want?</a>
+         <div class="page-navigation">
+            <a id="page-navigation-btn" href="/exercises">Don't see the exercise you
+               want?</a>
+         </div>
+
       </div>
    </div>
 </div>
