@@ -127,6 +127,10 @@ def show_all_exercises():
     """Show all exercises
     - search exercises by name
     """
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
     myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
 
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
@@ -138,6 +142,9 @@ def show_all_exercises():
 @app.route('/exercise/<int:exercise_id>', methods=["GET"])
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
     res = get_API_exercise(exercise_id)  
@@ -147,7 +154,10 @@ def show_exercise_info(exercise_id):
 @app.route('/exercise/<int:exercise_id>/save', methods=["GET"])
 def save_exercise(exercise_id):
     """Save exercise"""
-    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
     res = get_API_exercise(exercise_id)       
     new_exercise = Exercise(
         name = res['name'],
