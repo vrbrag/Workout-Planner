@@ -20,7 +20,7 @@
                               {% if res['description']%}
                               <tr>
                                  <td>
-                                    <h6>Description</h6>{{ res['description'] }}
+                                    <h6>Description</h6><i>{{ res['description'] }}</i>
                                  </td>
                               </tr>
                               {% endif %}
@@ -44,11 +44,9 @@
 
                               {% if res['variations']%}
                               <tr>
-                                 <!-- <td>
-                                    <h5>Variations</h5>
-                                 </td> -->
                                  <td>
-                                    <a href="/exercise/variations/{{res['variations']}}">See Variations</a>
+                                    <a href="/exercise/variations/{{res['variations']}}">See
+                                       Variations</a>
                                  </td>
                               </tr>
                               {% endif %}
@@ -74,9 +72,9 @@
    </div>
 </div>
 
-<a id="page-navigation-btn" onclick="history.back()">Back</a>
+<a id="page-navigation-btn" href="/exercises"">Back</a>
 {% if res['id'] not in myExercises %}
-<a href="/exercise/{{ res['id']}}/save" id="page-navigation-btn">Save Exercise</a>
+<a href=" /exercise/{{ res['id']}}/save" id="page-navigation-btn">Save Exercise</a>
 {% else %}
 <i class="already-saved">Already saved!</i>
 {% endif %}

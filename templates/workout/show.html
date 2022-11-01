@@ -1,16 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- <ul>
-   {{workout.name}}
-   <li>Workout's exercise IDs: {{workout.exerciseIDs}}</li>
-   <li>Exercise table dataIDs: {{api_IDs}}</li>
 
-   {% for result in data %}
-   <li>{{result}}</li>
-   {%endfor%}
-
-</ul> -->
 
 <div id="main">
    <div class="container pt-4">
@@ -18,21 +9,20 @@
          <div class="col-sm-8">
             <h2 class="page-header" id="page-title">{{workout.name}}</h2>
             <hr>
+            <a id="page-navigation-btn" href="/track/{{workout.id}}">Log Workout</a>
          </div>
          <div class="page-navigation">
             <a id="page-navigation-btn" href="/workout/{{workout.id}}/edit">Edit</a>
-            <a id="page-navigation-btn" href="/track/{{workout.id}}">Track Workout</a>
+            <a id="page-navigation-btn" href="/">Back</a>
          </div>
       </div>
 
       {% for result in data %}
       <div class="row">
          <div class="main-content" id="col-sm-12">
-
             <div class="card-deck" id="deck-exercises">
                <div class="card" id="card-exercises">
                   <div class="card-body">
-
                      <div class="card-text">
                         <table class="table table-sm">
                            <tbody class="exercise-card">
@@ -43,14 +33,12 @@
                                     <img class="exercise-image" src="{{ image.image }}" alt="">
                                     {% endfor %}
                                  </td>
-
                               </tr>
                               {% endif %}
 
                               <tr>
                                  <td>
                                     <h5>{{result.name}}</h5>
-
                                  </td>
                               </tr>
 
@@ -61,7 +49,6 @@
                                  </td>
                               </tr>
                               {% endif %}
-
 
                               {% if result.equipment %}
                               <tr>
@@ -85,22 +72,17 @@
                               <tr>
                                  <td>
                                     <a href="/exercise/variations/{{result.variations}}">See variations</a>
-
                                  </td>
                               </tr>
                               {% endif %}
                            </tbody>
                         </table>
                      </div>
-                     <!-- <a href="/track/{{result.id}}">Track Exercise</a> -->
                   </div>
                </div>
             </div>
-
          </div>
       </div>
-
-
       {%endfor%}
    </div>
 </div>

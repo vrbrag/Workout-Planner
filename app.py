@@ -11,7 +11,7 @@ from models import db, connect_db, User, Exercise, ExerciseTracker, Workouts
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
-app.debug = False
+app.debug = True
 BASE_URL = 'https://wger.de/api/v2/'
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
@@ -292,13 +292,15 @@ def show_workout(workout_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    workout = Workouts.query.get_or_404(workout_id) # get workout's data
-    api_IDs = get_exercise_DataIDs(workout)    # parse & get list of exercise.dataIDs
-    print(api_IDs)
-    data = get_API_data(api_IDs)  # plug in API ids to find exercise data
+    # run api for this workouts exercise info:
+    workout = Workouts.query.get_or_404(workout_id)     # get workout data 
+    dict_exerciseIDs = get_exercise_DataIDs(workout)    # return parsed dict of this workout's Exercise id/dataID  
+    dataIDs = [d['dataID'] for d in dict_exerciseIDs]   # map list for dataID values
+    data = get_API_data(dataIDs)                        # return api data
   
-    return render_template('workout/show.html', workout=workout, api_IDs=api_IDs, data=data)
-
+    ids = [d['id'] for d in dict_exerciseIDs] 
+    return render_template('workout/show.html', workout=workout, ids=ids, data=data)
+    
 def get_exercise_DataIDs(workout):
     """Parse workout.exerciseIDs
     And filter for workout.exerciseIDs in Exercise db """
@@ -307,21 +309,20 @@ def get_exercise_DataIDs(workout):
                 .query
                 .filter(Exercise.id.in_(parsedExerciseIDs))
                 .all())
-    api_IDs = list([exercise.dataID for exercise in exercises])
-    print(api_IDs)
-    return api_IDs  # return list of dataID's
+    exerciseIDs = list([{'id': exercise.id, 'dataID': exercise.dataID} for exercise in exercises])
+    return exerciseIDs  
 
-def get_API_data(ids):
-    """Call API for full exercise results
-    - parameter: list of API data ids"""
+def get_API_data(dataIDs):
+    """Call API for full exercise data
+    - parameter: dict of exercise id/dataIDs"""
     resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
     data = resp.json()['results']
-
+    
     res = []
     for exercise in data:
-        if exercise['id'] in ids:
+        if exercise['id'] in dataIDs:
             res.append(exercise)
-    return res  # return list of API exercise data
+    return res 
 
 # -------------------------------------------------
 # Get Exercise Varations
@@ -340,43 +341,36 @@ def show_variations(variations):
 # -------------------------------------------------
 # Track Workout
 # -------------------------------------------------
-# @app.route('/track/<int:workout_id>/', methods=['GET','POST'])
-# def track_workout(workout_id):
-#     """Show workout info"""
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
+# by workout_id - track entire workout
+# alternatively > by exercise_id - track individual workouts (in show.html... how do I iterate over 'ids' for Track btn???)
+@app.route('/track/<int:workout_id>', methods=['GET','POST'])
+def track_workout(workout_id):
 
-#     workout = Workouts.query.get_or_404(workout_id)
-#     parsedExerciseIDs = json.loads(workout.exerciseIDs)
-#     print(parsedExerciseIDs)
-#     exercisesData = get_exercise_data(parsedExerciseIDs)
+    # exercise = Exercise.query.get_or_404(exercise_id)
+    workout = Workouts.query.get_or_404(workout_id)
+    parsedExerciseIDs = json.loads(workout.exerciseIDs)
+    exercises = (Exercise
+                .query
+                .filter(Exercise.id.in_(parsedExerciseIDs))
+                .all())
 
-#     for exercise in parsedExerciseIDs: #for each exercise ID, track exercise...
-#         form = TrackWorkoutForm()
-        
-#         if request.method == "POST" and form.validate_on_submit():
-            
-#             tracker = TrackWorkoutForm(
-#                 sets = form.sets.data,
-#                 reps = form.reps.data,
-#                 unit_rep = form.unit_rep.data,
-#                 weight = form.weight.data,
-#                 unit_weight = form.unit_weight.data,
-#                 exercise_id = exercise
-#             ) 
-#             db.session.add(tracker)  
-#             db.session.commit() 
+    form = TrackWorkoutForm()
+    if request.method == "POST" and form.validate_on_submit():
+        for exercise in exercises:    # <<<<<< need to iterate over exercise ids
+            print(exercise)
+            print(exercise.id)
+            track = TrackWorkoutForm(
+                sets = form.sets.data,
+                reps = form.reps.data,
+                unit_rep = form.unit_rep.data,
+                weight = form.weight.data,
+                unit_weight = form.unit_weight.data,
+                exercise_id = exercise.id      # <<<<<< 
+            ) 
+            db.session.add(track)  
+            db.session.commit()
+        return redirect('/')
 
-#     return render_template('track_workout.html', workout=workout, exercisesData=exercisesData, form=form)
+    return render_template ('track_workout.html', workout=workout, exercises=exercises, form=form)
 
-# def get_exercise_data(parsedExerciseIDs):
-#     """Parse workout.exerciseIDs
-#     And filter for workout exerciseIDs & workout names in Exercise db """
-#     # parsedExerciseIDs = json.loads(workout.exerciseIDs)
-#     exercises = (Exercise
-#                 .query
-#                 .filter(Exercise.id.in_(parsedExerciseIDs))
-#                 .all())
-#     exercisesData = list([{'id': exercise.id, 'name': exercise.name} for exercise in exercises])
-#     return exercisesData
+

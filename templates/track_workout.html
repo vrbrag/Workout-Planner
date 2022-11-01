@@ -2,75 +2,48 @@
 {% block content %}
 
 
-<!-- <ul>
-   {{workout.name}}
-   <li>Workout's exercise IDs: {{workout.exerciseIDs}}</li>
-   {% for name in exercise_names %}
-   <li>
-
-      {{name}}
-      {% include "_form.html" %}
-
-   </li>
-   {% endfor %}
-</ul> -->
-
 <div id="main">
    <div class="container pt-4">
       <div class="row">
          <div class="col-sm-8">
-            <h2 class="page-header" id="page-title">Track Workout - {{workout.name}}</h2>
-            <a href="/workout/edit">Edit</a>
+            <h3 class="page-header" id="page-title">{{workout.name}} <i class="new-log-title"> - New Log </i></h3>
             <hr>
+         </div>
+         <div class="page-navigation">
+            <a id="page-navigation-btn" onclick="history.back()">Cancel</a>
          </div>
       </div>
 
 
       <form method="POST">
-         {% for exercise in exercisesData %}
+         {% for exercise in exercises %}
          <div class="row">
             <div class="main-content" id="col-sm-12">
-
                <div class="card-deck" id="deck-exercises">
                   <div class="card" id="card-exercises">
                      <div class="card-body">
-
                         <div class="card-text">
-
                            <table class="table table-sm">
-
                               <tbody class="exercise-card">
-
                                  <tr>
                                     <td>
-                                       <h5>{{exercise['name']}}</h5>
+                                       <h5>{{exercise.name}}</h5>
                                     </td>
                                  </tr>
-
                                  <tr>
-                                    <td data-exercise-id="{{exercise['id']}}">{% include "_form.html" %}</td>
+                                    <td data-exercise-id="{{exercise.id}}">{% include "_form.html" %}</td>
                                  </tr>
-
                            </table>
-
-
                         </div>
-
                      </div>
                   </div>
                </div>
-
             </div>
          </div>
          {% endfor %}
-         <button>Complete Workout</button>
+         <button id="page-navigation-btn">Complete Workout</button>
       </form>
-
 
    </div>
 </div>
-
-
-
-
 {% endblock %}

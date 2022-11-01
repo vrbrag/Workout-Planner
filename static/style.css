@@ -88,6 +88,14 @@
  .already-saved {
    font-size: 11px;
  }
+
+ .exercise-card a{
+   /* text-decoration: none; */
+   color: orange;
+ }
+.exercise-card a:hover{
+   color: rgb(253, 200, 103);
+ }
   /* =====================================================
  _________________/ *Workout* Tab /__________________
  ===================================================== */
