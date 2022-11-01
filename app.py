@@ -294,6 +294,7 @@ def show_workout(workout_id):
 
     workout = Workouts.query.get_or_404(workout_id) # get workout's data
     api_IDs = get_exercise_DataIDs(workout)    # parse & get list of exercise.dataIDs
+    print(api_IDs)
     data = get_API_data(api_IDs)  # plug in API ids to find exercise data
   
     return render_template('workout/show.html', workout=workout, api_IDs=api_IDs, data=data)
@@ -307,6 +308,7 @@ def get_exercise_DataIDs(workout):
                 .filter(Exercise.id.in_(parsedExerciseIDs))
                 .all())
     api_IDs = list([exercise.dataID for exercise in exercises])
+    print(api_IDs)
     return api_IDs  # return list of dataID's
 
 def get_API_data(ids):
