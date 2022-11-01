@@ -1,0 +1,139 @@
+
+.nav-item {
+   margin: auto;
+   padding-left: 20px;
+ }
+ 
+ .nav > li > img {
+   width: 32px;
+   border-radius: 32px;
+ }
+ 
+ .page-navigation {
+   display: flex;
+   justify-content: right;
+ }
+ 
+ #page-navigation-btn {
+   margin: 1px 0px 5px 10px;
+   font: bold 14px Arial;
+   text-decoration: none;
+   background-color: #ffffff;
+   color: #333333;
+   padding: 4px 7px 4px 7px;
+   border-top: 1px solid #CCCCCC;
+   border-right: 1px solid #333333;
+   border-bottom: 1px solid #333333;
+   border-left: 1px solid #CCCCCC;
+   border-radius: 3px;
+ }
+ #page-navigation-btn:hover {
+   background-color: rgba(252, 171, 22, 0.445);
+   color: orange;
+ }
+ #page-instructions {
+   padding: 0px 0px 12px 3px;
+ }
+ 
+ /* =====================================================
+ _________________/ *Exercise* Tab /__________________
+ ===================================================== */
+ /* --------------------------------------- */
+ /* Exercise Table Styling */
+ /* --------------------------------------- */
+ * {
+    box-sizing: border-box;
+  }
+  
+ #myInput {
+    /* background-image: url('/css/searchicon.png'); Add a search icon to input */
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 100%; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 20px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    margin-bottom: 12px; /* Add some space below the input */
+  }
+  
+  #exercisesTable {
+    border-collapse: collapse; /* Collapse borders */
+    width: 100%; /* Full-width */
+    border: 1px solid #ddd; /* Add a grey border */
+    font-size: 18px; /* Increase font-size */
+  }
+  
+  #exercisesTable th, #myTable td {
+    text-align: center; /* Left-align text */
+    padding: 12px; /* Add padding */
+  }
+  
+  #exercisesTable tr {
+    /* Add a bottom border to all table rows */
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  #exercisesTable tr.header, #exercisesTable tr:hover{
+    /* Add a background color to the table header and on hover */
+    background-color: #f1f1f1;
+  }
+  #exercisesTable a{
+    text-decoration: none;
+    color: black;
+  }
+  #exercisesTable a:hover{
+    color: orange;
+  }
+ .already-saved {
+   font-size: 11px;
+ }
+  /* =====================================================
+ _________________/ *Workout* Tab /__________________
+ ===================================================== */
+ /* --------------------------------------- */
+ /* Workout Table Styling */
+ /* --------------------------------------- */
+ .card-deck {
+   padding-bottom: 12px;
+   
+ }
+ #deck-exercises{
+   padding-bottom: 18px;
+   
+ }
+ #card-exercises{
+   border-color: black;
+ }
+ 
+ .card-body {
+   padding: 5px 5px 0px 5px;
+   
+ }
+ 
+ .workout-card a {
+   text-decoration: none;
+   color: black;
+ } 
+ .workout-card a:hover {
+   color: orange;
+ }
+ 
+ .row .card-body:hover {
+   background-color: #f1f1f1;
+ }
+ 
+ #workout-timestamp {
+   font-size: 10px;
+ }
+ 
+ img.exercise-image {
+   /* width: 200px; */
+   height: 100px;
+   padding-right: 15px;
+ }
+ 
+ img.show-exercise-image {
+   height: 300px;
+   padding-right: 15px;
+ }
