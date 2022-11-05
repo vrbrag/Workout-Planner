@@ -27,7 +27,7 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
-
+# FLASK_APP=app.py FLASK_DEBUG=1 TEMPLATES_AUTO_RELOAD=1 flask run
 
 
 # _________________________________________________
@@ -355,22 +355,35 @@ def track_workout(workout_id):
                 .all())
 
     form = TrackWorkoutForm()
-    if request.method == "POST" and form.validate_on_submit():
-        for exercise in exercises:    # <<<<<< need to iterate over exercise ids
-            print(exercise)
-            print(exercise.id)
-            track = TrackWorkoutForm(
-                sets = form.sets.data,
-                reps = form.reps.data,
-                unit_rep = form.unit_rep.data,
-                weight = form.weight.data,
-                unit_weight = form.unit_weight.data,
-                exercise_id = exercise.id      # <<<<<< 
-            ) 
-            db.session.add(track)  
-            db.session.commit()
-        return redirect('/')
-
+    # if request.method == "POST" and form.validate_on_submit():
+    #     for exercise in exercises:    # <<<<<< need to iterate over exercise ids
+    #         print(exercise)
+    #         print(exercise.id)
+    #         track = TrackWorkoutForm({
+    #             'sets' : form.sets.data,
+    #             'reps' : form.reps.data,
+    #             'unit_rep' : form.unit_rep.data,
+    #             'weight' : form.weight.data,
+    #             'unit_weight' : form.unit_weight.data,
+    #             'exercise_id' : exercise.id      # <<<<<< 
+    #         }) 
+    #         db.session.add(track)  
+    #         db.session.commit()
+    #     return redirect('/')
+    
     return render_template ('track_workout.html', workout=workout, exercises=exercises, form=form)
 
+@app.route('/track/<int:exercise_id>/submit', methods=["POST"])
+def track_submit_exercise(exercise_id):
 
+    if request.method == "POST" and form.validate_on_submit():
+        track = TrackWorkoutForm({
+            'sets' : form.sets.data,
+            'reps' : form.reps.data,
+            'unit_rep' : form.unit_rep.data,
+            'weight' : form.weight.data,
+            'unit_weight' : form.unit_weight.data,
+            'exercise_id' : exercise_id      # <<<<<< 
+        }) 
+        db.session.add(track)  
+        db.session.commit()

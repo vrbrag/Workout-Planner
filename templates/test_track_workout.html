@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="col-sm-8">
+            <h3 class="page-header" id="page-title">{{workout.name}} <i class="new-log-title"> - New Log </i></h3>
+            <hr>
+         </div>
+         <div class="page-navigation">
+            <a id="page-navigation-btn" onclick="history.back()">Cancel</a>
+         </div>
+      </div>
+
+
+
+      {% for exercise in exercises %}
+      <form method="POST">
+         <div class="row">
+            <div class="main-content" id="col-sm-12">
+               <div class="card-deck" id="deck-exercises">
+                  <div class="card" id="card-exercises">
+                     <div class="card-body">
+                        <div class="card-text">
+                           <h5>{{exercise.name}}</h5>
+                           <table class="table table-sm">
+                              <thead>
+                                 <th>
+                                    {{ form.sets.label}}
+                                 </th>
+                                 <th>
+                                    {{ form.reps.label}}
+                                 </th>
+                                 <th>
+                                    {{ form.unit_rep.label}}
+                                 </th>
+                                 <th>
+                                    {{ form.weight.label}}
+                                 </th>
+                                 <th>
+                                    {{ form.unit_weight.label}}
+                                 </th>
+                              </thead>
+                              <tbody class="exercise-card">
+                                 <!-- <tr>
+                                    <td>
+                                       <h5>{{exercise.name}}</h5>
+                                    </td>
+                                 </tr> -->
+                                 <tr>
+                                    <td>
+                                       {{form.sets(class="form-input") }}
+                                    </td>
+                                    <td>
+                                       {{form.reps(class="form-input") }}
+                                    </td>
+                                    <td>
+                                       {{ form.unit_rep }}
+                                    </td>
+                                    <td>
+                                       {{form.weight(class="form-input") }}
+                                    </td>
+                                    <td>
+                                       {{form.unit_weight(class="form-input") }}
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td><button class="submit-track-exercise" id="page-navigation-btn"
+                                          data-id="{{exercise.id}}">Complete
+                                          Exercise</button>
+                                    </td>
+
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </form>
+      {% endfor %}
+      <div class="page-navigation">
+         <a href="/" id="page-navigation-btn">Complete Workout</a>
+      </div>
+
+   </div>
+</div>
+{% endblock %}
