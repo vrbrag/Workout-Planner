@@ -46,21 +46,5 @@ async function saveExercise() {
 // 
 // _____________________________________________________
 
-$('.submit-track-exercise').click(function () {
-   const id = $(this).data('id')
-   // alert(`you clicked: ${id}`)
-})
 
-async function SubForm(e) {
-   e.preventDefault();
-   var url = $(this).closest('form').attr('action'),
-      data = $(this).closest('form').serialize();
-   $.ajax({
-      url: url,
-      type: 'post',
-      data: data,
-      success: function () {
-         // Whatever you want to do after the form is successfully submitted
-      }
-   });
-}
+

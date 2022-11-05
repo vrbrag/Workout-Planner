@@ -9,15 +9,14 @@
          <div class="col-sm-8">
             <h2 class="page-header" id="page-title">{{workout.name}}</h2>
             <hr>
-            <a id="page-navigation-btn" href="/track/{{workout.id}}">Log Workout</a>
          </div>
          <div class="page-navigation">
             <a id="page-navigation-btn" href="/workout/{{workout.id}}/edit">Edit</a>
             <a id="page-navigation-btn" href="/">My Workouts</a>
          </div>
       </div>
-      {{ids}}
-      {% for result in data %}
+
+      {% for exercise in my_exercises %}
       <div class="row">
          <div class="main-content" id="col-sm-12">
             <div class="card-deck" id="deck-exercises">
@@ -26,55 +25,19 @@
                      <div class="card-text">
                         <table class="table table-sm">
                            <tbody class="exercise-card">
-                              {% if result.images %}
-                              <tr>
-                                 <td class="row-image">
-                                    {% for image in result.images %}
-                                    <img class="exercise-image" src="{{ image.image }}" alt="">
-                                    {% endfor %}
-                                 </td>
-                              </tr>
-                              {% endif %}
-
                               <tr>
                                  <td>
-                                    <h5>{{result.name}}</h5>
+                                    <a href="/exercise/{{exercise.dataID}}">
+                                       <h5>{{exercise.name}}</h5>
+                                    </a>
                                  </td>
-                              </tr>
-
-                              {% if result.description %}
-                              <tr>
                                  <td>
-                                    <i>{{result.description}}</i>
+                                    <div class="page-navigation">
+                                       <a id="page-navigation-btn" href="/track/{{workout.id}}/{{exercise.id}}">Log
+                                          Exercise</a>
+                                    </div>
                                  </td>
                               </tr>
-                              {% endif %}
-
-                              {% if result.equipment %}
-                              <tr>
-                                 <td>
-                                    <h6>Equipment:</h6> {{result.equipment[0]['name']}}
-                                 </td>
-                              </tr>
-                              {% endif %}
-
-                              {% if result.muscles %}
-                              <tr>
-                                 <td>
-                                    <h6>Primary Muscle:</h6>
-                                    {{result.category['name']}} -
-                                    <i>({{result.muscles[0]['name']}})</i>
-                                 </td>
-                              </tr>
-                              {% endif %}
-
-                              {% if result.variations %}
-                              <tr>
-                                 <td>
-                                    <a href="/exercise/variations/{{result.variations}}">See variations</a>
-                                 </td>
-                              </tr>
-                              {% endif %}
                            </tbody>
                         </table>
                      </div>

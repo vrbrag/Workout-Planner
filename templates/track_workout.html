@@ -6,7 +6,7 @@
    <div class="container pt-4">
       <div class="row">
          <div class="col-sm-8">
-            <h3 class="page-header" id="page-title">{{workout.name}} <i class="new-log-title"> - New Log </i></h3>
+            <h3 class="page-header" id="page-title">New Exercise Log</h3>
             <hr>
          </div>
          <div class="page-navigation">
@@ -16,7 +16,7 @@
 
 
       <form method="POST">
-         {% for exercise in exercises %}
+
          <div class="row">
             <div class="main-content" id="col-sm-12">
                <div class="card-deck" id="deck-exercises">
@@ -31,7 +31,7 @@
                                     </td>
                                  </tr>
                                  <tr>
-                                    <td class="submit-track-exercise" data-exercise-id="{{exercise.id}}">{% include
+                                    <td>{% include
                                        "_form.html" %}</td>
                                  </tr>
                            </table>
@@ -41,8 +41,7 @@
                </div>
             </div>
          </div>
-         {% endfor %}
-         <button id="page-navigation-btn">Complete Workout</button>
+         <button id="page-navigation-btn">Complete Exercise</button>
       </form>
 
    </div>

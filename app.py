@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, json
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, json, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -293,25 +293,26 @@ def show_workout(workout_id):
         return redirect("/")
 
     # run api for this workouts exercise info:
-    workout = Workouts.query.get_or_404(workout_id)     # get workout data 
-    dict_exerciseIDs = get_exercise_DataIDs(workout)    # return parsed dict of this workout's Exercise id/dataID  
-    dataIDs = [d['dataID'] for d in dict_exerciseIDs]   # map list for dataID values
-    data = get_API_data(dataIDs)                        # return api data
-  
-    ids = [d['id'] for d in dict_exerciseIDs] 
-    return render_template('workout/show.html', workout=workout, ids=ids, data=data)
-    
-def get_exercise_DataIDs(workout):
-    """Parse workout.exerciseIDs
-    And filter for workout.exerciseIDs in Exercise db """
+    workout = Workouts.query.get_or_404(workout_id)     
     parsedExerciseIDs = json.loads(workout.exerciseIDs)
-    exercises = (Exercise
+    my_exercises = (Exercise
                 .query
                 .filter(Exercise.id.in_(parsedExerciseIDs))
-                .all())
-    exerciseIDs = list([{'id': exercise.id, 'dataID': exercise.dataID} for exercise in exercises])
-    return exerciseIDs  
+                .all()) 
+    return render_template('workout/show.html', workout=workout, my_exercises=my_exercises)
+    
+# def get_exercise_DataIDs(workout):
+#     """Parse workout.exerciseIDs
+#     And filter for workout.exerciseIDs in Exercise db """
+#     parsedExerciseIDs = json.loads(workout.exerciseIDs)
+#     exercises = (Exercise
+#                 .query
+#                 .filter(Exercise.id.in_(parsedExerciseIDs))
+#                 .all())
+#     exerciseIDs = list([{'id': exercise.id, 'dataID': exercise.dataID} for exercise in exercises])
+#     return exerciseIDs  
 
+# SAVE**************
 def get_API_data(dataIDs):
     """Call API for full exercise data
     - parameter: dict of exercise id/dataIDs"""
@@ -341,49 +342,26 @@ def show_variations(variations):
 # -------------------------------------------------
 # Track Workout
 # -------------------------------------------------
-# by workout_id - track entire workout
-# alternatively > by exercise_id - track individual workouts (in show.html... how do I iterate over 'ids' for Track btn???)
-@app.route('/track/<int:workout_id>', methods=['GET','POST'])
-def track_workout(workout_id):
+@app.route('/track/<int:workout_id>/<int:exercise_id>', methods=['GET','POST'])
+def track_workout(workout_id, exercise_id):
 
-    # exercise = Exercise.query.get_or_404(exercise_id)
-    workout = Workouts.query.get_or_404(workout_id)
-    parsedExerciseIDs = json.loads(workout.exerciseIDs)
-    exercises = (Exercise
-                .query
-                .filter(Exercise.id.in_(parsedExerciseIDs))
-                .all())
+    exercise = Exercise.query.get_or_404(exercise_id)
 
     form = TrackWorkoutForm()
-    # if request.method == "POST" and form.validate_on_submit():
-    #     for exercise in exercises:    # <<<<<< need to iterate over exercise ids
-    #         print(exercise)
-    #         print(exercise.id)
-    #         track = TrackWorkoutForm({
-    #             'sets' : form.sets.data,
-    #             'reps' : form.reps.data,
-    #             'unit_rep' : form.unit_rep.data,
-    #             'weight' : form.weight.data,
-    #             'unit_weight' : form.unit_weight.data,
-    #             'exercise_id' : exercise.id      # <<<<<< 
-    #         }) 
-    #         db.session.add(track)  
-    #         db.session.commit()
-    #     return redirect('/')
-    
-    return render_template ('track_workout.html', workout=workout, exercises=exercises, form=form)
-
-@app.route('/track/<int:exercise_id>/submit', methods=["POST"])
-def track_submit_exercise(exercise_id):
-
     if request.method == "POST" and form.validate_on_submit():
-        track = TrackWorkoutForm({
-            'sets' : form.sets.data,
-            'reps' : form.reps.data,
-            'unit_rep' : form.unit_rep.data,
-            'weight' : form.weight.data,
-            'unit_weight' : form.unit_weight.data,
-            'exercise_id' : exercise_id      # <<<<<< 
-        }) 
+        track = ExerciseTracker(
+            reps = request.form['reps'],
+            sets = request.form['sets'],
+            unit_rep = form.unit_rep.data,
+            weight = form.weight.data,
+            unit_weight = form.unit_weight.data,
+            exercise_id = exercise_id
+        ) 
         db.session.add(track)  
         db.session.commit()
+        flash(f"'{exercise.name}' - new log saved!", "success")
+        return redirect(url_for('show_workout', workout_id=workout_id))
+    
+    return render_template ('track_workout.html', exercise=exercise, form=form)
+
+

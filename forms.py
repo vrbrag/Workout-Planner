@@ -41,11 +41,9 @@ class CreateWorkoutForm(FlaskForm):
 class TrackWorkoutForm(FlaskForm):
    """Form to create workout"""
     
-   print('In trackworkout form')
    sets = IntegerField('Sets', validators=[DataRequired()])
    reps = IntegerField('Amount', validators=[Optional()])
    unit_rep = SelectField('Unit', choices=['Reps', 'Max Reps', 'Til Failure', 'Miles', 'Minutes', 'Seconds'])
    weight = IntegerField('Weight', validators=[Optional()])
    unit_weight = SelectField('Unit', choices=['lbs', 'bodyweight', 'miles per hour'])
    notes = TextAreaField('Notes', validators=[Optional()]) 
-   submit = SubmitField('Complete Exercise') 
