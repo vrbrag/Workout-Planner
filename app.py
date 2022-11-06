@@ -131,7 +131,8 @@ def show_all_exercises():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
+    user_exercises = curr_user_exercises(g.user)
+    myExercises = [(exercises.dataID) for exercises in user_exercises]
 
     resp = requests.get(f"{BASE_URL}/exercise", params={'language':2, 'limit':232})
     data_exercises = resp.json()['results']
@@ -145,9 +146,11 @@ def show_exercise_info(exercise_id):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
-    myExercises = [(exercises.dataID) for exercises in Exercise.query.all()]
+   
     res = get_API_exercise(exercise_id)  
+
+    user_exercises = curr_user_exercises(g.user)
+    myExercises = [(exercises.dataID) for exercises in user_exercises]
     return render_template('show_exercise.html', res=res, myExercises=myExercises)
 
 
@@ -162,7 +165,8 @@ def save_exercise(exercise_id):
     new_exercise = Exercise(
         name = res['name'],
         description = res['description'],
-        dataID = res['id']
+        dataID = res['id'],
+        user_id = session[CURR_USER_KEY]
     )
     db.session.add(new_exercise)
     db.session.commit()
@@ -198,6 +202,7 @@ def homepage():
                     .order_by(Workouts.timestamp.desc())
                     .all()
                     )
+        print(workouts)
         return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
     else:
         return render_template('home-anon.html')
@@ -214,8 +219,9 @@ def create_workout():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+    user_exercises = curr_user_exercises(g.user)
     form = CreateWorkoutForm()
-    form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
+    form.exercises.choices = [(exercises.id, exercises.name) for exercises in user_exercises]
 
     if request.method == "POST" and form.validate_on_submit():
         json_exerciseIDs = string_exerciseIDs(form.exercises.data)
@@ -249,10 +255,10 @@ def edit_workout(workout_id):
         return redirect("/")
 
     workout = Workouts.query.get_or_404(workout_id)
-    # parsedExerciseIDs = json.loads(workout.exerciseIDs)
-
+    
+    user_exercises = curr_user_exercises(g.user)
     form = CreateWorkoutForm(obj=workout)
-    form.exercises.choices = [(exercises.id, exercises.name) for exercises in Exercise.query.all()]
+    form.exercises.choices = [(exercises.id, exercises.name) for exercises in user_exercises]
     # form.exercises.data = (parsedExerciseIDs)
 
     if request.method == "POST" and form.validate_on_submit():
@@ -292,7 +298,6 @@ def show_workout(workout_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    # run api for this workouts exercise info:
     workout = Workouts.query.get_or_404(workout_id)     
     parsedExerciseIDs = json.loads(workout.exerciseIDs)
     my_exercises = (Exercise
@@ -301,18 +306,7 @@ def show_workout(workout_id):
                 .all()) 
     return render_template('workout/show.html', workout=workout, my_exercises=my_exercises)
     
-# def get_exercise_DataIDs(workout):
-#     """Parse workout.exerciseIDs
-#     And filter for workout.exerciseIDs in Exercise db """
-#     parsedExerciseIDs = json.loads(workout.exerciseIDs)
-#     exercises = (Exercise
-#                 .query
-#                 .filter(Exercise.id.in_(parsedExerciseIDs))
-#                 .all())
-#     exerciseIDs = list([{'id': exercise.id, 'dataID': exercise.dataID} for exercise in exercises])
-#     return exerciseIDs  
 
-# SAVE**************
 def get_API_data(dataIDs):
     """Call API for full exercise data
     - parameter: dict of exercise id/dataIDs"""
@@ -355,7 +349,9 @@ def track_workout(workout_id, exercise_id):
             unit_rep = form.unit_rep.data,
             weight = form.weight.data,
             unit_weight = form.unit_weight.data,
-            exercise_id = exercise_id
+            notes = form.notes.data or None,
+            exercise_id = exercise_id,
+            user_id = session[CURR_USER_KEY]
         ) 
         db.session.add(track)  
         db.session.commit()
@@ -365,3 +361,15 @@ def track_workout(workout_id, exercise_id):
     return render_template ('track_workout.html', exercise=exercise, form=form)
 
 
+# _________________________________________________
+# *********** Functions **********
+# _________________________________________________
+def curr_user_exercises(user):
+    """Filter for curr_user's exercises in Exercise"""
+    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
+    exercises = (Exercise
+                    .query
+                    .filter(Exercise.user_id.in_(exercise_ids))
+                    .all()
+                    )
+    return exercises

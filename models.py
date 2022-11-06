@@ -33,6 +33,9 @@ class User(db.Model):
 
    workouts = db.relationship(
        'Workouts',)
+       
+   exercises = db.relationship(
+       'Exercise',)
 
    def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
@@ -96,14 +99,8 @@ class Exercise(db.Model):
    dataID = db.Column(
          db.Integer)
 
-
-   def serialize(self):
-      return {
-         "id": self.id,
-         "name": self.name,
-         "description": self.description,
-         "dataID": self.dataID,
-      }
+   user_id = db.Column(
+      db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 
@@ -168,7 +165,8 @@ class ExerciseTracker(db.Model):
    exercise_id = db.Column(
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
    
-   # exercise = db.relationship('Exercise', backref='tracker')
+   user_id = db.Column(
+      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
 
 
