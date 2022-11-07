@@ -202,7 +202,7 @@ def homepage():
                     .order_by(Workouts.timestamp.desc())
                     .all()
                     )
-        print(workouts)
+        # print(workouts)
         return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
     else:
         return render_template('home-anon.html')
@@ -224,6 +224,7 @@ def create_workout():
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in user_exercises]
 
     if request.method == "POST" and form.validate_on_submit():
+        print(form.exercises.data) # list
         json_exerciseIDs = string_exerciseIDs(form.exercises.data)
         new_workout = Workouts(
                     name = form.name.data,
@@ -283,6 +284,9 @@ def delete_workout(workout_id):
         return redirect("/")
 
     workout = Workouts.query.get_or_404(workout_id)
+    if workout.user_id != g.user.id:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     db.session.delete(workout)
     db.session.commit()
@@ -299,13 +303,17 @@ def show_workout(workout_id):
         return redirect("/")
 
     workout = Workouts.query.get_or_404(workout_id)     
-    parsedExerciseIDs = json.loads(workout.exerciseIDs)
-    my_exercises = (Exercise
+    my_exercises = get_workout_exercises(workout.exerciseIDs)
+     
+    return render_template('workout/show.html', workout=workout, my_exercises=my_exercises)
+
+def get_workout_exercises(ids):
+    parsedExerciseIDs = json.loads(ids)
+    workout_exercises = (Exercise
                 .query
                 .filter(Exercise.id.in_(parsedExerciseIDs))
-                .all()) 
-    return render_template('workout/show.html', workout=workout, my_exercises=my_exercises)
-    
+                .all())
+    return workout_exercises
 
 def get_API_data(dataIDs):
     """Call API for full exercise data

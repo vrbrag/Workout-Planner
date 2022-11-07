@@ -12,10 +12,10 @@ db.drop_all()
 db.create_all()
 
 # The 302 redirect, on the other hand, is only temporary. A good example of when to use a 302 status code is for localization and language purposes.
-
++
 # For instance, if you visit a clothing website based in the United Kingdom but you are located in the United States. A 302 redirect would send you to the US version of the site to ensure the currency and other content are displayed correctly, according to your location.
 
-class GetAPIExercisesTestCase(TestCase):
+class ExerciseViewsTestCase(TestCase):
    """Test display and functionality of exercises"""
 
    def setUp(self):
