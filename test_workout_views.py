@@ -1,5 +1,5 @@
 from distutils.command.build_scripts import first_line_re
-from unittest import TestCase
+from unittest import TestCase, skip
 from sqlalchemy import exc
  
 from app import app, json, CURR_USER_KEY, get_workout_exercises, string_exerciseIDs, get_API_data
@@ -18,10 +18,12 @@ db.create_all()
 class WorkoutViewsTestCase(TestCase):
  
    def setUp(self):
- 
-      User.query.delete()
-      Workouts.query.delete()
-      Exercise.query.delete()
+      db.drop_all()
+      db.create_all()
+
+      # User.query.delete()
+      # Workouts.query.delete()
+      # Exercise.query.delete()
 
       # Add 1 sample User
       self.testuser = User.signup(
@@ -38,17 +40,20 @@ class WorkoutViewsTestCase(TestCase):
       self.ex1 = Exercise(
          name ='2 Handed Kettlebell Swing',
          description = '<p>Two Handed Russian Style Kettlebell swing</p>',
-         dataID = 345
+         dataID = 345,
+         user_id = self.testuser_id
       )
       self.ex2 = Exercise(
          name ='Front Squats',
          description = '<p>Squats</p>',
-         dataID = 191
+         dataID = 191,
+         user_id = self.testuser_id
       )
       self.ex3 = Exercise(
          name ='Good Mornings',
          description = '',
-         dataID = 116
+         dataID = 116,
+         user_id = self.testuser_id
       )
  
       self.ex1_id = 1
@@ -58,7 +63,7 @@ class WorkoutViewsTestCase(TestCase):
       self.ex1.id = self.ex1_id
       self.ex2.id = self.ex2_id
       self.ex3.id = self.ex3_id
-      
+      db.session.add_all([self.ex1, self.ex2, self.ex3])
       db.session.commit()
       
  
@@ -69,6 +74,7 @@ class WorkoutViewsTestCase(TestCase):
       return res
    
 #### Add new workout #############
+   # @skip ('skip for now')
    def test_new_workout_form(self):
       """Test show new workout form"""
       with app.test_client() as client:
@@ -77,18 +83,23 @@ class WorkoutViewsTestCase(TestCase):
          
          resp = client.get('/workout/new')
          html = resp.get_data(as_text=True) 
-
+         
          self.assertEqual(resp.status_code, 200)
          self.assertIn('class="form-control" id="exercises"', html)
 
+         exercise = [exercise for exercise in Exercise.query.all()]
+         self.assertIn(exercise[1].name, 'Front Squats')
+
+   # @skip ('skip for now')
    def test_function_string_exerciseIDs(self):
       """Test function: string_exerciseIDs"""
       form_exercises_data = [1,2,3]
       self.assertEqual(string_exerciseIDs(form_exercises_data), '[1,2,3]')
 
+   # @skip ('skip for now')
    def test_add_new_workout(self):
       """Test 'POST' new workout form
-      - Redirect to homepage"""
+      - Redirect to homepage that should show new workout name"""
       with app.test_client() as client:
          with client.session_transaction() as sess:
             sess[CURR_USER_KEY] = self.testuser.id
@@ -98,13 +109,12 @@ class WorkoutViewsTestCase(TestCase):
          html = resp.get_data(as_text=True) 
 
          self.assertEqual(resp.status_code, 200)
-         self.assertIn("My Workouts", html)
-         workouts = Workouts.query.all()
-         for w in workouts:
-            self.assertIn(f'{w.name}', html)
+         self.assertIn("My Workouts", html)  # title of homepage
+         self.assertIn('Workout 1', html)    # title of new workout
 
 
 #### Delete Workout #############
+   # @skip ('skip for now')
    def test_workout_delete(self):
       w = Workouts(
          id=1,
@@ -118,12 +128,14 @@ class WorkoutViewsTestCase(TestCase):
       with app.test_client() as client:
          with client.session_transaction() as sess:
             sess[CURR_USER_KEY] = self.testuser.id
-         resp = client.post('/workout/1/delete')
+         w = Workouts.query.get(1)
+         resp = client.post(f'/workout/{w.id}/delete')
    
          self.assertEqual(resp.status_code, 302)
          w = Workouts.query.get(1)
          self.assertIsNone(w)
 
+   # @skip ('skip for now')
    def test_invalid_workout_delete(self):
       u = User.signup(username="unauthorized-user",
                         email="testtest@test.com",
@@ -154,7 +166,8 @@ class WorkoutViewsTestCase(TestCase):
 
 
 
-#### Show User Workouts/homepage #############
+#### Show User Workout #############
+   # @skip ('skip for now')
    def test_workout_show(self):
       """Test show workout"""
       w = Workouts(
@@ -175,23 +188,26 @@ class WorkoutViewsTestCase(TestCase):
          html = resp.get_data(as_text=True)
    
          self.assertEqual(resp.status_code, 200)
+         # Workout name 
          self.assertIn(w.name, str(resp.data))
-
-         exercises = get_workout_exercises(w.exerciseIDs)
-         for exercise in exercises:
-            self.assertIn(f'<a href="/track/{w.id}/{self.ex1.dataID}">Log Exercise</a>', html)
-            self.assertIn(f'<a href="/track/{w.id}/{self.ex2.dataID}">Log Exercise</a>', html)
-            self.assertIsNone(f'<a href="/track/{w.id}/{self.ex3.dataID}">Log Exercise</a>', html)
+         # Exercise 2 name
+         self.assertIn('Front Squats', str(resp.data))
+         
    
+   # @skip ('skip for now')
    def test_function_get_workout_exercises(self):
-      """Test function to get workout's exercises"""
-      exerciseIDs = '[1,2,3]'
-      exercises = get_workout_exercises(exerciseIDs)
-      for exercise in exercises:
-         self.assertIn(exercise.name, self.ex1.name)
-         self.assertIn(exercise.dataID, self.ex1.dataID)
+      """Test function to get workout's exercises
+      - Convert string of ids to list
+      - Return list of exercise models found in database"""
+      ids_string = '[1,2,3]'
+      exercises = get_workout_exercises(ids_string)
+      self.assertEqual(type(exercises), list)
+      # 'exercises' should equal models found in Exercise db (via setUp function)
+      db_exercises = Exercise.query.all()
+      self.assertEqual(exercises, db_exercises)
+      
 
- 
+   # @skip ('skip for now')
    def test_invalid_workouts_show(self):
       with app.test_client() as client:
          with client.session_transaction() as sess:
