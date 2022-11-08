@@ -2,7 +2,7 @@ from distutils.command.build_scripts import first_line_re
 from unittest import TestCase, skip
 from sqlalchemy import exc
  
-from app import app, json, CURR_USER_KEY, get_workout_exercises, string_exerciseIDs, get_API_data
+from app import app, json, CURR_USER_KEY, get_workout_exercises, string_exerciseIDs, get_API_data, curr_user_exercises, g
 from models import db, User, Exercise, Workouts, ExerciseTracker
  
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gitfit_app_test'
@@ -216,3 +216,62 @@ class WorkoutViewsTestCase(TestCase):
          resp = client.get('/workout/22')
 
          self.assertEqual(resp.status_code, 404)
+
+
+#### Edit User Workout #############
+   def test_edit_workout(self):
+      w = Workouts(
+         id=1,
+         name='Workout 1',
+         exerciseIDs='[1,2]',
+         user_id=self.testuser.id
+      )
+      db.session.add(w)
+      db.session.commit()
+   
+      with app.test_client() as client:
+         with client.session_transaction() as sess:
+            sess[CURR_USER_KEY] = self.testuser.id
+
+         w = Workouts.query.get(1)
+         resp = client.get(f'/workout/{w.id}/edit')
+         html = resp.get_data(as_text=True)
+
+         self.assertEqual(resp.status_code, 200)
+      
+   def test_submit_edit_workout(self):
+      w = Workouts(
+         id=1,
+         name='Workout 1',
+         exerciseIDs='[1,2]',
+         user_id=self.testuser.id
+      )
+      db.session.add(w)
+      db.session.commit()
+   
+      with app.test_client() as client:
+         with client.session_transaction() as sess:
+            sess[CURR_USER_KEY] = self.testuser.id
+
+         w = Workouts.query.get(1)
+         d = {"name" : "Edited Workout 1", "exerciseIDs" : "[1,2,3]", "user_id": sess[CURR_USER_KEY]}
+         resp = client.post(f'/workout/{w.id}/edit', data = d, follow_redirects=True)
+         
+         self.assertEqual(resp.status_code, 200)
+         # w = Workouts.query.get(1)
+         # print(w.name)
+         # print(w.exerciseIDs)
+
+   def test_curr_user_exercises(self):
+      """Find current user's saved exercises"""
+      with app.test_client() as client:
+         with client.session_transaction() as sess:
+            sess[CURR_USER_KEY] = self.testuser.id
+
+         user = User.query.get(sess[CURR_USER_KEY])
+         exercises = curr_user_exercises(user)
+        
+         self.assertEqual(type(exercises), list)
+         # 'exercises' should equal models found in Exercise db (via setUp function)
+         db_exercises = Exercise.query.all()
+         self.assertEqual(exercises, db_exercises)

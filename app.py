@@ -374,6 +374,7 @@ def track_workout(workout_id, exercise_id):
 # _________________________________________________
 def curr_user_exercises(user):
     """Filter for curr_user's exercises in Exercise"""
+    print(user)
     exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
     exercises = (Exercise
                     .query
