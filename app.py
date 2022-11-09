@@ -293,7 +293,7 @@ def delete_workout(workout_id):
     return redirect('/')
 
 # -------------------------------------------------
-# Show workout (details of each exercise)
+# Show workout 
 # -------------------------------------------------
 @app.route('/workout/<int:workout_id>')
 def show_workout(workout_id):
@@ -303,9 +303,13 @@ def show_workout(workout_id):
         return redirect("/")
 
     workout = Workouts.query.get_or_404(workout_id)     
-    my_exercises = get_workout_exercises(workout.exerciseIDs)
+    my_exercises = get_workout_exercises(workout.exerciseIDs) # list of workout exercises, specific for this workout
+    my_logs = curr_user_tracked_exercises(g.user) # list of user logs for ALL user  saved exercises
+    
+    is_Logs = get_workout_logs(my_exercises, my_logs)
+    print(is_Logs)
      
-    return render_template('workout/show.html', workout=workout, my_exercises=my_exercises)
+    return render_template('workout/show.html', workout=workout, my_exercises=my_exercises, my_logs=my_logs, is_Logs=is_Logs)
 
 def get_workout_exercises(ids):
     parsedExerciseIDs = json.loads(ids)
@@ -374,7 +378,6 @@ def track_workout(workout_id, exercise_id):
 # _________________________________________________
 def curr_user_exercises(user):
     """Filter for curr_user's exercises in Exercise"""
-    print(user)
     exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
     exercises = (Exercise
                     .query
@@ -382,3 +385,31 @@ def curr_user_exercises(user):
                     .all()
                     )
     return exercises
+
+def curr_user_tracked_exercises(user):
+    """Filter for curr_user's tracked exercises"""
+    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
+    tracked = (ExerciseTracker
+                    .query
+                    .filter(ExerciseTracker.user_id.in_(exercise_ids))
+                    .order_by(ExerciseTracker.timestamp.desc())
+                    .all()
+                    )
+    print(tracked)
+    return tracked
+
+def get_workout_logs(my_exercises, my_logs):
+    """
+    - determine if workout has logged exercises"""
+    exercises = [exercise.id for exercise in my_exercises]
+    print(exercises)
+    logs = [log.exercise_id for log in my_logs]
+    print(logs)
+    # want to remove any duplicate exercise_ids
+    latest_logs = list(set(logs)) 
+    print(latest_logs)
+    for i in logs:
+        if i in exercises:
+            return True
+        else:
+            return False

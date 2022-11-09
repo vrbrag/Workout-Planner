@@ -38,6 +38,34 @@
                                     </div>
                                  </td>
                               </tr>
+                              <tr>
+                                 <td>
+
+                                    {% for tracked in my_logs %}
+                                    {% if exercise.id == tracked.exercise_id%}
+                                    <table class="show-exercise-logs">
+
+                                       <tbody>
+                                          <tr class="show-exercise-log">
+                                             <td>{{tracked.sets}} x {{tracked.reps}}</td>
+                                             <td>{{tracked.unit_rep}}</td>
+                                             <td> {{tracked.weight}} {{tracked.unit_weight}}</td>
+                                             <td id="timestamp"><small><i>{{tracked.timestamp.strftime('%d %b
+                                                      %Y')}}</i></small>
+                                             </td>
+                                             <td class="log-notes">
+                                                {% if tracked.notes %}
+                                                {{tracked.notes}}
+                                                {% endif %}
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                 </td>
+                              </tr>
                            </tbody>
                         </table>
                      </div>

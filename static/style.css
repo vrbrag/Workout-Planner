@@ -89,13 +89,14 @@
    font-size: 11px;
  }
 
- .exercise-card a{
-   /* text-decoration: none; */
-   color: orange;
+.exercise-card a{
+   
+   color: black
  }
 .exercise-card a:hover{
    color: rgb(253, 200, 103);
  }
+
   /* =====================================================
  _________________/ *Workout* Tab /__________________
  ===================================================== */
@@ -119,7 +120,7 @@
    
  }
  
- .workout-card a {
+ .workout-card a{
    text-decoration: none;
    color: black;
  } 
@@ -145,3 +146,29 @@
    height: 300px;
    padding-right: 15px;
  }
+
+ /* --------------------------------------- */
+ /* Workout - Exercise log table Styling */
+ /* --------------------------------------- */
+ .show-exercise-logs table {
+  /* border: 1px solid black; */
+  table-layout: fixed;
+  width: 200px;
+}
+
+.show-exercise-logs td {
+  text-align: center;
+  /* border: 1px solid black; */
+  width: 100px;
+  overflow: hidden;
+}
+
+td.log-notes {
+  text-align: left;
+  padding-left: 10px;
+  width: 45%;
+}
+
+#timestamp {
+  color: rgba(128, 128, 128, 0.849);
+}
