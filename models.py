@@ -100,7 +100,7 @@ class Exercise(db.Model):
          db.Integer)
 
    user_id = db.Column(
-      db.Integer, db.ForeignKey('users.id'), nullable=False)
+      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
 
 
@@ -121,7 +121,7 @@ class Workouts(db.Model):
       db.String)
      
    user_id = db.Column(
-      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
    timestamp = db.Column(
         db.DateTime,
@@ -166,7 +166,7 @@ class ExerciseTracker(db.Model):
       db.Integer, db.ForeignKey('exercise.id', ondelete='CASCADE'))
    
    user_id = db.Column(
-      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+      db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
 
 

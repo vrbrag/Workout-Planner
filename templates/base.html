@@ -18,7 +18,7 @@
    {% block style %}{% endblock %}
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
          <div class="navbar-header">
@@ -27,7 +27,9 @@
                <span class="navbar-brand mb-0 h1">GitFit</span>
             </a>
          </div>
+
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if g.user %}
             <ul class="navbar-nav mr-auto">
                <li class="nav-item">
                   <a class="nav-link" href="/">My Workouts <span class="sr-only"></span></a>
@@ -37,6 +39,7 @@
                   <a class="nav-link" href="/exercises">Search Exercises</a>
                </li>
             </ul>
+            {% endif %}
          </div>
          <ul class="nav navbar-nav navbar-right">
             <!-- ################## -->

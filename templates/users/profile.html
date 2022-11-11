@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div id="main">
+   <div class="container pt-4">
+      <div class="row">
+         <div class="column">
+            <div class="main-content-profile" id="col-sm-12">
+               <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" id="profile-avatar">
+            </div>
+         </div>
+
+         <!-- </div> -->
+         <div class="column">
+            <div class="main-content-profile" id="col-sm-12">
+               <div class="card-deck-profile" id="deck-profile">
+                  <div class="card" id="card-profile">
+                     <div class="card-body-profile">
+                        <div class="card-text">
+                           <table class="table table-sm">
+                              <tbody id="profile-card">
+                                 <tr>
+                                    <td>Username : </td>
+                                    <td>
+                                       <h5>{{user.username}}</h5>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td> Email : </td>
+                                    <td>
+                                       <h5>{{user.email}}</h5>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>Password : </td>
+                                    <td>
+                                       <h5>******</h5>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+
+                           <div class="page-navigation">
+
+                              <!-- {% if g.user.id == user.id %} -->
+                              <a href="/users/edit" id="page-navigation-btn">Edit Profile</a>
+
+                              <form method="POST" action="/users/{{ user.id }}/delete">
+                                 <button id="page-navigation-btn">Delete Profile</button>
+                              </form>
+
+                              <!-- {% endif %} -->
+
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

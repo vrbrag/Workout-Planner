@@ -1,4 +1,6 @@
-
+body{
+  background-color: rgba(189, 189, 189, 0.13);
+}
 .nav-item {
    margin: auto;
    padding-left: 20px;
@@ -27,14 +29,22 @@
    border-left: 1px solid #CCCCCC;
    border-radius: 3px;
  }
+
  #page-navigation-btn:hover {
    background-color: rgba(252, 171, 22, 0.445);
    color: orange;
  }
+
  #page-instructions {
    padding: 0px 0px 12px 3px;
  }
- 
+
+  /* --------------------------------------- */
+ /* Sign up */
+ /* --------------------------------------- */
+ .join-message {
+   margin-top: 50px;
+ }
  /* =====================================================
  _________________/ *Exercise* Tab /__________________
  ===================================================== */
@@ -75,24 +85,26 @@
   }
   
   #exercisesTable tr.header, #exercisesTable tr:hover{
-    /* Add a background color to the table header and on hover */
     background-color: #f1f1f1;
   }
+
   #exercisesTable a{
     text-decoration: none;
     color: black;
   }
+
   #exercisesTable a:hover{
     color: orange;
   }
+
  .already-saved {
    font-size: 11px;
  }
 
 .exercise-card a{
-   
    color: black
  }
+
 .exercise-card a:hover{
    color: rgb(253, 200, 103);
  }
@@ -105,19 +117,18 @@
  /* --------------------------------------- */
  .card-deck {
    padding-bottom: 12px;
-   
  }
+ 
  #deck-exercises{
    padding-bottom: 18px;
-   
  }
+
  #card-exercises{
    border-color: black;
  }
  
  .card-body {
-   padding: 5px 5px 0px 5px;
-   
+   padding: 5px 10px 0px 10px;
  }
  
  .workout-card a{
@@ -128,10 +139,7 @@
    color: orange;
  }
  
- .row .card-body:hover {
-   background-color: #f1f1f1;
- }
- 
+
  #workout-timestamp {
    font-size: 10px;
  }
@@ -171,4 +179,46 @@ td.log-notes {
 
 #timestamp {
   color: rgba(128, 128, 128, 0.849);
+}
+
+/* ********************************** */
+/* User Profile */
+/* ********************************** */
+
+.column {
+  float: center;
+  width: 40%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#profile-avatar {
+  border-radius: 100%;
+  width: 200px;
+  height: 200px;
+  border: 5px solid #fff;
+  z-index: 1;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(136, 153, 166, 0.15);
+  margin: auto;
+  padding: 10px;
+}
+
+.card-deck-profile {
+  width: fit-content;
+  margin: 0 auto; 
+  float: none; 
+  margin-bottom: 10px; 
+}
+
+#card-profile{
+  border-color: black;
+}
+
+.card-body-profile  {
+  padding: 5px 15px 5px 15px;
 }

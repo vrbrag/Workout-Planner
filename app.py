@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, CreateWorkoutForm, TrackWorkoutForm, FieldList, FormField
+from forms import UserAddForm, LoginForm, EditUserForm, CreateWorkoutForm, TrackWorkoutForm, FieldList, FormField
 from models import db, connect_db, User, Exercise, ExerciseTracker, Workouts
 
 
@@ -120,7 +120,7 @@ def logout():
 # *****************/ Exercises Tab ****************
 # _________________________________________________
 # -------------------------------------------------
-# Search/Show/Save Exercise Info 
+# Search API exercises 
 # -------------------------------------------------
 @app.route('/exercises')
 def show_all_exercises():
@@ -139,7 +139,9 @@ def show_all_exercises():
 
     return render_template('search_exercises.html', data_exercises=data_exercises, myExercises=myExercises)
 
-
+# -------------------------------------------------
+# Show API exercise
+# -------------------------------------------------
 @app.route('/exercise/<int:exercise_id>', methods=["GET"])
 def show_exercise_info(exercise_id):
     """Show details of exercise"""
@@ -153,7 +155,9 @@ def show_exercise_info(exercise_id):
     myExercises = [(exercises.dataID) for exercises in user_exercises]
     return render_template('show_exercise.html', res=res, myExercises=myExercises)
 
-
+# -------------------------------------------------
+# Save API exercise to Exercise db
+# -------------------------------------------------
 @app.route('/exercise/<int:exercise_id>/save', methods=["GET"])
 def save_exercise(exercise_id):
     """Save exercise"""
@@ -168,6 +172,7 @@ def save_exercise(exercise_id):
         dataID = res['id'],
         user_id = session[CURR_USER_KEY]
     )
+    # print(type(new_exercise.user_id))
     db.session.add(new_exercise)
     db.session.commit()
     flash(f"'{res['name']}' exercise saved", "info")
@@ -183,9 +188,26 @@ def get_API_exercise(id):
         if exercise['id'] == id:
             res = exercise
     return res
+# -------------------------------------------------
+# Show Exercise Varations
+# -------------------------------------------------
+@app.route('/exercise/variations/<variations>')
+def show_variations(variations):
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    parsedExerciseIDs = json.loads(variations)
+    exercises = get_API_data(parsedExerciseIDs)
+    return render_template('variations.html', exercises=exercises)
+
+
 # _________________________________________________
 # ***********/ Homepage / My Workout Tab **********
 # _________________________________________________
+# -------------------------------------------------
+# Show User's Workouts
 # -------------------------------------------------
 @app.route("/")
 def homepage():
@@ -195,14 +217,12 @@ def homepage():
     """
     if g.user:
         workout_ids = [workout.id for workout in g.user.workouts] + [g.user.id]
-        # print(g.user)
         workouts = (Workouts
                     .query
                     .filter(Workouts.user_id.in_(workout_ids))
                     .order_by(Workouts.timestamp.desc())
                     .all()
                     )
-        # print(workouts)
         return render_template('users/home.html', workouts=workouts, workout_ids=workout_ids)
     else:
         return render_template('home-anon.html')
@@ -224,7 +244,6 @@ def create_workout():
     form.exercises.choices = [(exercises.id, exercises.name) for exercises in user_exercises]
 
     if request.method == "POST" and form.validate_on_submit():
-        print(form.exercises.data) # list
         json_exerciseIDs = string_exerciseIDs(form.exercises.data)
         new_workout = Workouts(
                     name = form.name.data,
@@ -307,7 +326,6 @@ def show_workout(workout_id):
     my_logs = curr_user_tracked_exercises(g.user) # list of user logs for ALL user  saved exercises
     
     is_Logs = get_workout_logs(my_exercises, my_logs)
-    print(is_Logs)
      
     return render_template('workout/show.html', workout=workout, my_exercises=my_exercises, my_logs=my_logs, is_Logs=is_Logs)
 
@@ -332,24 +350,14 @@ def get_API_data(dataIDs):
     return res 
 
 # -------------------------------------------------
-# Get Exercise Varations
-# -------------------------------------------------
-@app.route('/exercise/variations/<variations>')
-def show_variations(variations):
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    parsedExerciseIDs = json.loads(variations)
-    exercises = get_API_data(parsedExerciseIDs)
-    return render_template('variations.html', exercises=exercises)
-
-# -------------------------------------------------
 # Track Workout
 # -------------------------------------------------
 @app.route('/track/<int:workout_id>/<int:exercise_id>', methods=['GET','POST'])
 def track_workout(workout_id, exercise_id):
+    """Log exercise"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     exercise = Exercise.query.get_or_404(exercise_id)
 
@@ -395,21 +403,80 @@ def curr_user_tracked_exercises(user):
                     .order_by(ExerciseTracker.timestamp.desc())
                     .all()
                     )
-    print(tracked)
     return tracked
 
 def get_workout_logs(my_exercises, my_logs):
-    """
-    - determine if workout has logged exercises"""
+    """ determine if workout has logged exercises"""
     exercises = [exercise.id for exercise in my_exercises]
-    print(exercises)
-    logs = [log.exercise_id for log in my_logs]
-    print(logs)
-    # want to remove any duplicate exercise_ids
-    latest_logs = list(set(logs)) 
-    print(latest_logs)
+    logs = [log.exercise_id for log in my_logs] 
     for i in logs:
         if i in exercises:
             return True
         else:
             return False
+
+
+# _________________________________________________
+# ***********/ User Profile **********
+# _________________________________________________
+# -------------------------------------------------
+# Show User Info
+# -------------------------------------------------
+@app.route('/users/<int:user_id>')
+def show_user_info(user_id):
+    """Show user information"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    user = User.query.get_or_404(user_id)
+    
+    return render_template('users/profile.html', user=user)
+
+@app.route('/users/edit', methods=["GET", "POST"])
+def edit_user_info():
+    """Show user information"""
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = g.user 
+    form = EditUserForm(obj=user)
+    if request.method == "POST" and form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data
+
+            db.session.commit()
+            return redirect(f'/users/{user.id}')
+
+        flash ('Wrong password. Please Try again.', 'danger')
+
+    return render_template('users/edit.html', user=user, form=form)
+
+@app.route('/users/<int:user_id>/delete', methods=["POST"])
+def delete_user(user_id):
+    """Delete user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    
+    user = User.query.get_or_404(user_id)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return redirect("/signup")
+
+
+exercises = (Exercise
+                    .query
+                    .filter(Exercise.user_id == 2)
+                    .all()
+                    )
+for exercise in exercises:
+    print(exercise.name)
+    print(exercise.user_id)
