@@ -470,13 +470,3 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect("/signup")
-
-
-exercises = (Exercise
-                    .query
-                    .filter(Exercise.user_id == 2)
-                    .all()
-                    )
-for exercise in exercises:
-    print(exercise.name)
-    print(exercise.user_id)

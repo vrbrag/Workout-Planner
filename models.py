@@ -32,10 +32,10 @@ class User(db.Model):
         default="/static/images/default-pic.png",)
 
    workouts = db.relationship(
-       'Workouts',)
+       'Workouts', cascade = "all,delete",)
        
    exercises = db.relationship(
-       'Exercise',)
+       'Exercise', cascade = "all,delete",)
 
    def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
