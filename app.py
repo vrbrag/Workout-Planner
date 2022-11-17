@@ -17,8 +17,11 @@ BASE_URL = 'https://wger.de/api/v2/'
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgres:///gitfit_app'))
-
+    os.environ.get('DATABASE_URL', 'postgresql:///gitfit_app'))
+uri = app.config['SQLALCHEMY_DATABASE_URI']  # or other relevant config var
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+# rest of connection code using the connection string `uri`
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
