@@ -72,7 +72,7 @@
    </div>
 </div>
 
-<a id="page-navigation-btn" href="/exercises"">Back</a>
+<a id="page-navigation-btn" onclick="history.back()">Back</a>
 {% if res['id'] not in myExercises %}
 <a href=" /exercise/{{ res['id']}}/save" id="page-navigation-btn">Save Exercise</a>
 {% else %}

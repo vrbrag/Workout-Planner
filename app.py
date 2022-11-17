@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, json, url_for
 from flask_debugtoolbar import DebugToolbarExtension
@@ -150,6 +151,8 @@ def show_exercise_info(exercise_id):
         return redirect("/")
    
     res = get_API_exercise(exercise_id)  
+    if res['description']:
+        res['description'] = re.sub(r'<[^>]+>', '', res['description'])
 
     user_exercises = curr_user_exercises(g.user)
     myExercises = [(exercises.dataID) for exercises in user_exercises]
@@ -178,16 +181,7 @@ def save_exercise(exercise_id):
     flash(f"'{res['name']}' exercise saved", "info")
     return redirect('/exercises')
 
-def get_API_exercise(id):
-    """Get one api exercise"""
-    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
-    data = resp.json()['results']
-  
-    res = None
-    for exercise in data:
-        if exercise['id'] == id:
-            res = exercise
-    return res
+
 # -------------------------------------------------
 # Show Exercise Varations
 # -------------------------------------------------
@@ -200,6 +194,10 @@ def show_variations(variations):
 
     parsedExerciseIDs = json.loads(variations)
     exercises = get_API_data(parsedExerciseIDs)
+    for res in exercises:
+        if res['description']:
+            res['description'] = re.sub(r'<[^>]+>', '', res['description'])
+            
     return render_template('variations.html', exercises=exercises)
 
 
@@ -256,13 +254,6 @@ def create_workout():
         return redirect('/')
     return render_template('workout/new.html', form=form )
 
-def string_exerciseIDs(exerciseIDs):
-    """Function to stringify list of selected exercise IDs from new workout form"""
-    selected = []
-    for exerciseID in exerciseIDs:
-        selected.append(exerciseID)
-    json_exerciseIDs = json.dumps(selected, separators=(',', ':'))
-    return json_exerciseIDs
 
 # -------------------------------------------------
 # Edit workout 
@@ -329,25 +320,6 @@ def show_workout(workout_id):
      
     return render_template('workout/show.html', workout=workout, my_exercises=my_exercises, my_logs=my_logs, is_Logs=is_Logs)
 
-def get_workout_exercises(ids):
-    parsedExerciseIDs = json.loads(ids)
-    workout_exercises = (Exercise
-                .query
-                .filter(Exercise.id.in_(parsedExerciseIDs))
-                .all())
-    return workout_exercises
-
-def get_API_data(dataIDs):
-    """Call API for full exercise data
-    - parameter: dict of exercise id/dataIDs"""
-    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
-    data = resp.json()['results']
-    
-    res = []
-    for exercise in data:
-        if exercise['id'] in dataIDs:
-            res.append(exercise)
-    return res 
 
 # -------------------------------------------------
 # Track Workout
@@ -379,42 +351,6 @@ def track_workout(workout_id, exercise_id):
         return redirect(url_for('show_workout', workout_id=workout_id))
     
     return render_template ('track_workout.html', exercise=exercise, form=form)
-
-
-# _________________________________________________
-# *********** Functions **********
-# _________________________________________________
-def curr_user_exercises(user):
-    """Filter for curr_user's exercises in Exercise"""
-    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
-    exercises = (Exercise
-                    .query
-                    .filter(Exercise.user_id.in_(exercise_ids))
-                    .all()
-                    )
-    return exercises
-
-def curr_user_tracked_exercises(user):
-    """Filter for curr_user's tracked exercises"""
-    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
-    tracked = (ExerciseTracker
-                    .query
-                    .filter(ExerciseTracker.user_id.in_(exercise_ids))
-                    .order_by(ExerciseTracker.timestamp.desc())
-                    .all()
-                    )
-    return tracked
-
-def get_workout_logs(my_exercises, my_logs):
-    """ determine if workout has logged exercises"""
-    exercises = [exercise.id for exercise in my_exercises]
-    logs = [log.exercise_id for log in my_logs] 
-    for i in logs:
-        if i in exercises:
-            return True
-        else:
-            return False
-
 
 # _________________________________________________
 # ***********/ User Profile **********
@@ -470,3 +406,76 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect("/signup")
+
+# _________________________________________________
+# *********** Functions **********
+# _________________________________________________
+def curr_user_exercises(user):
+    """Filter for curr_user's exercises in Exercise"""
+    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
+    exercises = (Exercise
+                    .query
+                    .filter(Exercise.user_id.in_(exercise_ids))
+                    .all()
+                    )
+    return exercises
+
+def curr_user_tracked_exercises(user):
+    """Filter for curr_user's tracked exercises"""
+    exercise_ids = [exercise.id for exercise in user.exercises] + [user.id]
+    tracked = (ExerciseTracker
+                    .query
+                    .filter(ExerciseTracker.user_id.in_(exercise_ids))
+                    .order_by(ExerciseTracker.timestamp.desc())
+                    .all()
+                    )
+    return tracked
+
+def get_workout_logs(my_exercises, my_logs):
+    """ determine if workout has logged exercises"""
+    exercises = [exercise.id for exercise in my_exercises]
+    logs = [log.exercise_id for log in my_logs] 
+    for i in logs:
+        if i in exercises:
+            return True
+        else:
+            return False
+
+def get_workout_exercises(ids):
+    parsedExerciseIDs = json.loads(ids)
+    workout_exercises = (Exercise
+                .query
+                .filter(Exercise.id.in_(parsedExerciseIDs))
+                .all())
+    return workout_exercises
+
+def get_API_data(dataIDs):
+    """Call API for full exercise data
+    - parameter: dict of exercise id/dataIDs"""
+    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
+    data = resp.json()['results']
+    
+    res = []
+    for exercise in data:
+        if exercise['id'] in dataIDs:
+            res.append(exercise)
+    return res
+
+def string_exerciseIDs(exerciseIDs):
+    """Function to stringify list of selected exercise IDs from new workout form"""
+    selected = []
+    for exerciseID in exerciseIDs:
+        selected.append(exerciseID)
+    json_exerciseIDs = json.dumps(selected, separators=(',', ':'))
+    return json_exerciseIDs
+
+def get_API_exercise(id):
+    """Get one api exercise"""
+    resp = requests.get(f"{BASE_URL}/exerciseinfo", params={'language':2, 'limit':386})
+    data = resp.json()['results']
+  
+    res = None
+    for exercise in data:
+        if exercise['id'] == id:
+            res = exercise
+    return res
