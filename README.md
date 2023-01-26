@@ -1,6 +1,8 @@
 # Capstone1
 Title of Project
 ## GitFit App
+https://vrbrag-gitfit-app.herokuapp.com/
+
 API: https://wger.de/api/v2/ 
 
 ### Goal
