@@ -1,7 +1,7 @@
 # Capstone1
 Title of Project
 ## GitFit App
-https://vrbrag-gitfit-app.herokuapp.com/
+https://gitfit-capstone.onrender.com
 
 API: https://wger.de/api/v2/ 
 
